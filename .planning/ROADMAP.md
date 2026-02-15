@@ -52,11 +52,11 @@ Plans:
   3. Extractor handles all required SNMP types (INTEGER, STRING, Counter32, Counter64, Gauge32, Timeticks, IpAddress) without error
   4. EnumMap values are stored as metadata on the extraction result but NOT used as metric values -- raw integers are always preserved for metrics
   5. Source field is set automatically at load time (Module vs Configuration) and cannot be overridden via appsettings.json
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: PollDefinitionDto and OID entry models
-- [ ] 02-02: Generic extractor and SNMP type handling
+- [ ] 02-01-PLAN.md -- PollDefinitionDto, OidEntryDto, ExtractionResult domain models, ISnmpExtractor interface, SharpSnmpLib package
+- [ ] 02-02-PLAN.md -- TDD: SnmpExtractorService implementation with 15 test cases covering all SNMP types, roles, and EnumMap semantics
 
 ### Phase 3: SNMP Listener + Device Routing
 **Goal**: The SNMP listener receives v2c traps on UDP, identifies the source device, filters by OID, and routes into device-specific bounded channels with backpressure monitoring -- forming Layers 1 and 2 of the pipeline
