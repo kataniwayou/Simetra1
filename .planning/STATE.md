@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** The SNMP pipeline must reliably receive traps, poll devices, extract data, and emit telemetry to OTLP -- with automatic leader-follower failover ensuring no single point of failure.
-**Current focus:** Phase 9: Health Probes + Lifecycle
+**Current focus:** Phase 9: Health Probes + Lifecycle -- COMPLETE
 
 ## Current Position
 
-Phase: 9 of 10 (Health Probes + Lifecycle) -- IN PROGRESS
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-15 -- Completed 09-01-PLAN.md (Health Probes + Job Interval Registry)
+Phase: 9 of 10 (Health Probes + Lifecycle) -- COMPLETE
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-02-15 -- Completed 09-02-PLAN.md (Graceful Shutdown + Channel Drain + Lifecycle)
 
-Progress: [████████████████████████░░░] 20/21 (95%)
+Progress: [███████████████████████████] 21/21 (100%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 20
+- Total plans completed: 21
 - Average duration: 2.6 min
-- Total execution time: 0.86 hours
+- Total execution time: 0.93 hours
 
 **By Phase:**
 
@@ -35,11 +35,11 @@ Progress: [███████████████████████
 | 06-scheduling-system | 3/3 | 8 min | 2.7 min |
 | 07-telemetry-integration | 2/2 | 4 min | 2.0 min |
 | 08-high-availability | 2/2 | 5 min | 2.5 min |
-| 09-health-probes-lifecycle | 1/2 | 3 min | 3.0 min |
+| 09-health-probes-lifecycle | 2/2 | 7 min | 3.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 2 min, 2 min, 3 min, 2 min, 3 min
-- Trend: stable (health probes + job interval registry wired into DI)
+- Last 5 plans: 2 min, 3 min, 2 min, 3 min, 4 min
+- Trend: stable (graceful shutdown orchestrator with time-budgeted steps)
 
 *Updated after each plan completion*
 
@@ -110,6 +110,12 @@ Recent decisions affecting current work:
 - [09-01]: JobIntervalRegistry created inline in AddScheduling -- interval values only available during Quartz config, registered as singleton instance
 - [09-01]: IJobIntervalRegistry registration stays in AddScheduling (not AddSimetraHealthChecks) -- data lives where intervals are configured
 - [09-01]: Liveness staleEntries uses anonymous objects cast to IReadOnlyDictionary<string, object> for HealthCheckResult.Unhealthy data
+- [09-02]: GracefulShutdownService implements IHostedService (not BackgroundService) -- only needs StopAsync, no background work
+- [09-02]: SnmpListenerService resolved via GetServices<IHostedService>().OfType<SnmpListenerService>() -- AddHostedService does not register concrete type directly
+- [09-02]: K8sLeaseElection resolved via GetService<K8sLeaseElection>() -- registered as concrete singleton, null in local dev mode
+- [09-02]: FlushTelemetryAsync uses independent CTS (not linked to outer token) -- telemetry flush gets full budget regardless of prior outcomes
+- [09-02]: ForceFlush consolidated from ApplicationStopping lambda into GracefulShutdownService Step 5
+- [09-02]: DI registration order finalized: Telemetry -> Configuration -> DeviceModules -> SnmpPipeline -> ProcessingPipeline -> Scheduling -> HealthChecks -> Lifecycle
 
 ### Pending Todos
 
@@ -122,5 +128,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Completed 09-01-PLAN.md (Health Probes + Job Interval Registry)
+Stopped at: Completed 09-02-PLAN.md (Graceful Shutdown + Channel Drain + Lifecycle)
 Resume file: None
