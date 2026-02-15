@@ -149,12 +149,11 @@ Plans:
   3. Leader activates metric + trace OTLP exporters; followers keep only log exporter -- role-gated exporter decorator checks IsLeader dynamically on each Export call
   4. All pods execute identical business logic and maintain identical internal state -- only OTLP export behavior differs by role
   5. Role changes at runtime (follower becomes leader on failover) take effect immediately on the next Export call without restart
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 08-01: ILeaderElection abstraction and AlwaysLeaderElection
-- [ ] 08-02: K8sLeaseElection implementation
-- [ ] 08-03: Role-gated exporter wiring and dynamic role switching
+- [ ] 08-01-PLAN.md -- K8sLeaseElection BackgroundService + ILeaderElection, KubernetesClient install, environment-based DI registration
+- [ ] 08-02-PLAN.md -- RoleGatedExporter wiring into OTLP metric + trace exporter chain via manual construction
 
 ### Phase 9: Health Probes + Lifecycle
 **Goal**: Kubernetes health probes accurately reflect service state at each lifecycle stage, and the 11-step startup sequence plus graceful shutdown with time-budgeted steps ensure reliable pod lifecycle management
@@ -205,7 +204,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 5. Plugin System + Simetra Module | 2/2 | Complete | 2026-02-15 |
 | 6. Scheduling System | 3/3 | Complete | 2026-02-15 |
 | 7. Telemetry Integration | 2/2 | Complete | 2026-02-15 |
-| 8. High Availability | 0/3 | Not started | - |
+| 8. High Availability | 0/2 | Not started | - |
 | 9. Health Probes + Lifecycle | 0/3 | Not started | - |
 | 10. End-to-End Integration + Testing | 0/4 | Not started | - |
 
