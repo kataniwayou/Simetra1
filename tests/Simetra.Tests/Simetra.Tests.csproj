@@ -14,6 +14,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
     <!-- FluentAssertions pinned to 7.2.0 (Apache 2.0 license). Do NOT upgrade to 8.x (commercial license). -->
     <PackageReference Include="FluentAssertions" Version="7.2.0" />
+    <PackageReference Include="Lextm.SharpSnmpLib" Version="12.5.7" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
   </ItemGroup>
