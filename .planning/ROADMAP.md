@@ -35,11 +35,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Devices[] array with nested MetricPolls[] deserializes correctly, and Source field is set to Configuration automatically (not exposed in config)
   4. Invalid configuration (missing required fields, bad types) causes startup failure with descriptive error messages
   5. Project directory structure matches architecture (Configuration/, Models/, Devices/, Services/, Jobs/, Health/, Middleware/, Telemetry/, Extensions/)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Project scaffolding and directory structure
-- [ ] 01-02: Configuration options classes and binding
+- [ ] 01-01-PLAN.md -- Project scaffolding, directory structure, solution setup, health endpoint skeleton
+- [ ] 01-02-PLAN.md -- Configuration options classes, validators, DI registration, Program.cs wiring
+- [ ] 01-03-PLAN.md -- Configuration validation test suite (binding, validation, edge cases)
 
 ### Phase 2: Domain Models + Extraction Engine
 **Goal**: The generic extractor transforms raw SNMP varbinds into strongly typed domain objects using PollDefinitionDto definitions, with Role-based extraction producing metric values and labels without any per-device-type logic
@@ -198,7 +199,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Project Foundation + Configuration | 0/2 | Not started | - |
+| 1. Project Foundation + Configuration | 0/3 | Planning complete | - |
 | 2. Domain Models + Extraction Engine | 0/2 | Not started | - |
 | 3. SNMP Listener + Device Routing | 0/3 | Not started | - |
 | 4. Processing Pipeline | 0/2 | Not started | - |
@@ -211,5 +212,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 
 ---
 *Roadmap created: 2026-02-15*
-*Depth: comprehensive (10 phases, 27 plans)*
+*Depth: comprehensive (10 phases, 28 plans)*
 *Coverage: 95/95 v1 requirements mapped*
