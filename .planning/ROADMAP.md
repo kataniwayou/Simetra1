@@ -116,12 +116,12 @@ Plans:
   3. Heartbeat job sends a loopback trap to the SNMP listener using the OID from SimetraModule's trap definition (single source of truth), and stamps the liveness vector
   4. Correlation job generates a new correlationId and stamps the liveness vector at its configured interval; first correlationId is generated directly on startup before any job fires
   5. Liveness vector has one entry per scheduled job, stamped only by job completion (not by incoming traps)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 06-01: Quartz scheduler setup and job infrastructure
-- [ ] 06-02: Poll jobs (state and metric)
-- [ ] 06-03: Heartbeat job, correlation job, and liveness vector
+- [ ] 06-01-PLAN.md -- Quartz.AspNetCore install, RotatingCorrelationService, LivenessVectorService, PollDefinitionRegistry, DeviceRegistry extension, AddScheduling + Program.cs wiring with stub jobs
+- [ ] 06-02-PLAN.md -- StatePollJob and MetricPollJob full implementations (SNMP GET + extract + process)
+- [ ] 06-03-PLAN.md -- HeartbeatJob (loopback trap) and CorrelationJob (correlationId rotation) full implementations
 
 ### Phase 7: Telemetry Integration
 **Goal**: OpenTelemetry emits .NET runtime metrics, SNMP-derived metrics, structured logs, and distributed traces to the OTLP collector, with metric and trace exporters gated by leader role while log exporters run on all pods
