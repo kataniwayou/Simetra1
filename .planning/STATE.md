@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-15)
 
 ## Current Position
 
-Phase: 10 of 10 (End-to-End Integration + Testing) -- NOT STARTED
-Plan: 0 of 4 in current phase
-Status: Ready for planning
-Last activity: 2026-02-15 -- Completed Phase 9: Health Probes + Lifecycle (verified 9/9 must-haves)
+Phase: 10 of 10 (End-to-End Integration + Testing) -- In progress
+Plan: 2 of 4 in current phase
+Status: In progress
+Last activity: 2026-02-15 -- Completed 10-02-PLAN.md (Processing Pipeline + Liveness Detection Tests)
 
-Progress: [███████████████████████░░░░] 21/25 (84%)
+Progress: [████████████████████████░░░] 23/25 (92%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 21
+- Total plans completed: 23
 - Average duration: 2.6 min
-- Total execution time: 0.93 hours
+- Total execution time: 1.0 hours
 
 **By Phase:**
 
@@ -36,10 +36,11 @@ Progress: [███████████████████████
 | 07-telemetry-integration | 2/2 | 4 min | 2.0 min |
 | 08-high-availability | 2/2 | 5 min | 2.5 min |
 | 09-health-probes-lifecycle | 2/2 | 7 min | 3.5 min |
+| 10-end-to-end-integration-testing | 2/4 | 8 min | 4.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 2 min, 3 min, 2 min, 3 min, 4 min
-- Trend: stable (graceful shutdown orchestrator with time-budgeted steps)
+- Last 5 plans: 2 min, 3 min, 4 min, 4 min, 4 min
+- Trend: stable (test plans slightly longer due to MeterListener setup complexity)
 
 *Updated after each plan completion*
 
@@ -116,6 +117,9 @@ Recent decisions affecting current work:
 - [09-02]: FlushTelemetryAsync uses independent CTS (not linked to outer token) -- telemetry flush gets full budget regardless of prior outcomes
 - [09-02]: ForceFlush consolidated from ApplicationStopping lambda into GracefulShutdownService Step 5
 - [09-02]: DI registration order finalized: Telemetry -> Configuration -> DeviceModules -> SnmpPipeline -> ProcessingPipeline -> Scheduling -> HealthChecks -> Lifecycle
+- [10-02]: Mock IMeterFactory to return real Meter, use MeterListener for measurement capture -- avoids needing real OTLP pipeline in tests
+- [10-02]: IDisposable on MetricFactoryTests to dispose Meter and MeterListener -- prevents test pollution across test classes
+- [10-02]: Real LivenessVectorService for fresh-stamps test, Mock ILivenessVectorService for stale-stamps test -- real for simple behavior, mock for time manipulation
 
 ### Pending Todos
 
@@ -128,5 +132,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Completed 09-02-PLAN.md (Graceful Shutdown + Channel Drain + Lifecycle)
+Stopped at: Completed 10-02-PLAN.md (Processing Pipeline + Liveness Detection Tests)
 Resume file: None
