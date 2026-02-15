@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -20,9 +21,15 @@ namespace Simetra.Extensions;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Registers OpenTelemetry MeterProvider and TracerProvider with OTLP exporters,
-    /// plus the ILeaderElection abstraction. Must be called FIRST in DI registration
-    /// (registered first = disposed last, ensuring ForceFlush during shutdown).
+    /// Registers OpenTelemetry MeterProvider, TracerProvider, and LoggerProvider with
+    /// OTLP exporters, the ILeaderElection abstraction, and the log enrichment processor.
+    /// Must be called FIRST in DI registration (registered first = disposed last,
+    /// ensuring ForceFlush during shutdown).
+    /// <para>
+    /// Logging configuration: default providers (Console, Debug, EventSource) are cleared.
+    /// Console is re-added only when <see cref="LoggingOptions.EnableConsole"/> is true.
+    /// OTLP log exporter is always active (not role-gated -- all pods export logs).
+    /// </para>
     /// </summary>
     public static IHostApplicationBuilder AddSimetraTelemetry(
         this IHostApplicationBuilder builder)
@@ -30,8 +37,12 @@ public static class ServiceCollectionExtensions
         var otlpOptions = new OtlpOptions { Endpoint = "", ServiceName = "" };
         builder.Configuration.GetSection(OtlpOptions.SectionName).Bind(otlpOptions);
 
+        var loggingOptions = new LoggingOptions();
+        builder.Configuration.GetSection(LoggingOptions.SectionName).Bind(loggingOptions);
+
         builder.Services.AddSingleton<ILeaderElection, AlwaysLeaderElection>();
 
+        // --- Metrics + Tracing ---
         builder.Services.AddOpenTelemetry()
             .ConfigureResource(resource => resource
                 .AddService(serviceName: otlpOptions.ServiceName))
@@ -42,6 +53,42 @@ public static class ServiceCollectionExtensions
             .WithTracing(tracing => tracing
                 .AddSource(TelemetryConstants.TracingSourceName)
                 .AddOtlpExporter(o => o.Endpoint = new Uri(otlpOptions.Endpoint)));
+
+        // --- Logging ---
+        // Clear default providers (Console, Debug, EventSource) so that
+        // EnableConsole=false produces zero stdout output.
+        builder.Logging.ClearProviders();
+
+        // Conditionally re-add standard .NET console provider
+        if (loggingOptions.EnableConsole)
+        {
+            builder.Logging.AddConsole();
+        }
+
+        // OTLP log exporter: active on ALL pods (not role-gated -- TELEM-04).
+        // Enrichment processor adds site/role/correlationId to every log record.
+        builder.Logging.AddOpenTelemetry(logging =>
+        {
+            logging.IncludeScopes = true;
+            logging.IncludeFormattedMessage = true;
+            logging.SetResourceBuilder(
+                ResourceBuilder.CreateDefault()
+                    .AddService(serviceName: otlpOptions.ServiceName));
+            logging.AddOtlpExporter(o =>
+            {
+                o.Endpoint = new Uri(otlpOptions.Endpoint);
+            });
+            logging.AddProcessor(sp =>
+            {
+                var siteOptions = sp.GetRequiredService<IOptions<SiteOptions>>().Value;
+                var correlationService = sp.GetRequiredService<ICorrelationService>();
+                var leaderElection = sp.GetRequiredService<ILeaderElection>();
+                return new SimetraLogEnrichmentProcessor(
+                    correlationService,
+                    siteOptions.Name,
+                    () => leaderElection.CurrentRole);
+            });
+        });
 
         return builder;
     }
