@@ -8,4 +8,8 @@
     <RootNamespace>Simetra</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Lextm.SharpSnmpLib" Version="12.5.7" />
+  </ItemGroup>
+
 </Project>
