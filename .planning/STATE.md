@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-15)
 
 ## Current Position
 
-Phase: 9 of 10 (Health Probes + Lifecycle) -- NOT STARTED
-Plan: 0 of 3 in current phase
-Status: Ready for planning
-Last activity: 2026-02-15 -- Completed Phase 8: High Availability (verified 13/13 must-haves)
+Phase: 9 of 10 (Health Probes + Lifecycle) -- IN PROGRESS
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-02-15 -- Completed 09-01-PLAN.md (Health Probes + Job Interval Registry)
 
-Progress: [███████████████████░░░░░░░░] 19/27 (70%)
+Progress: [████████████████████████░░░] 20/21 (95%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
+- Total plans completed: 20
 - Average duration: 2.6 min
-- Total execution time: 0.81 hours
+- Total execution time: 0.86 hours
 
 **By Phase:**
 
@@ -35,10 +35,11 @@ Progress: [███████████████████░░░░
 | 06-scheduling-system | 3/3 | 8 min | 2.7 min |
 | 07-telemetry-integration | 2/2 | 4 min | 2.0 min |
 | 08-high-availability | 2/2 | 5 min | 2.5 min |
+| 09-health-probes-lifecycle | 1/2 | 3 min | 3.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 2 min, 2 min, 2 min, 3 min, 2 min
-- Trend: stable (role-gated OTLP exporter wiring completes HA phase)
+- Last 5 plans: 2 min, 2 min, 3 min, 2 min, 3 min
+- Trend: stable (health probes + job interval registry wired into DI)
 
 *Updated after each plan completion*
 
@@ -106,6 +107,9 @@ Recent decisions affecting current work:
 - [08-02]: AddReader(Func<IServiceProvider, MetricReader>) factory overload for deferred ILeaderElection resolution in metrics
 - [08-02]: AddProcessor(Func<IServiceProvider, BaseProcessor<Activity>>) factory overload for deferred ILeaderElection resolution in traces
 - [08-02]: Log OTLP exporter intentionally NOT wrapped -- all pods export logs (TELEM-04, HA-03)
+- [09-01]: JobIntervalRegistry created inline in AddScheduling -- interval values only available during Quartz config, registered as singleton instance
+- [09-01]: IJobIntervalRegistry registration stays in AddScheduling (not AddSimetraHealthChecks) -- data lives where intervals are configured
+- [09-01]: Liveness staleEntries uses anonymous objects cast to IReadOnlyDictionary<string, object> for HealthCheckResult.Unhealthy data
 
 ### Pending Todos
 
@@ -118,5 +122,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Completed Phase 8: High Availability (all 2 plans verified, 13/13 must-haves passed)
+Stopped at: Completed 09-01-PLAN.md (Health Probes + Job Interval Registry)
 Resume file: None
