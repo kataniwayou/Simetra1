@@ -1,7 +1,7 @@
 # Requirements: Simetra
 
 **Defined:** 2026-02-15
-**Core Value:** The SNMP pipeline must reliably receive traps, poll devices, extract data, and emit telemetry to OTLP — with automatic leader-follower failover ensuring no single point of failure.
+**Core Value:** The SNMP pipeline must reliably receive traps, poll devices, extract data, and emit telemetry to OTLP -- with automatic leader-follower failover ensuring no single point of failure.
 
 ## v1 Requirements
 
@@ -25,20 +25,20 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 - [ ] **EXTR-03**: Each OID entry has: OID, PropertyName, Role (Metric/Label), optional EnumMap
 - [ ] **EXTR-04**: Role:Metric produces metric value from raw SNMP integer; EnumMap stored as metadata only (Grafana value mappings)
 - [ ] **EXTR-05**: Role:Label produces label on all metrics from this DTO; value is enum-mapped string or raw string
-- [ ] **EXTR-06**: Generic extractor reads Oids from PollDefinitionDto — same logic for traps and polls, no per-device-type logic
+- [ ] **EXTR-06**: Generic extractor reads Oids from PollDefinitionDto -- same logic for traps and polls, no per-device-type logic
 - [ ] **EXTR-07**: Extractor handles SNMP types: INTEGER, STRING, Counter32, Counter64, Gauge32, Timeticks, IpAddress
 - [ ] **EXTR-08**: Extractor produces strongly typed domain objects per device type (e.g. HeartbeatData)
-- [ ] **EXTR-09**: Source field set automatically at load time: code → Module, config → Configuration (not exposed in appsettings.json)
+- [ ] **EXTR-09**: Source field set automatically at load time: code -> Module, config -> Configuration (not exposed in appsettings.json)
 
 ### Processing
 
-- [ ] **PROC-01**: Branch A creates metrics from each Role:Metric OID — metric name: {MetricName}_{Property}
+- [ ] **PROC-01**: Branch A creates metrics from each Role:Metric OID -- metric name: {MetricName}_{Property}
 - [ ] **PROC-02**: Branch A sends metrics to OTLP (leader only, gated by role)
 - [ ] **PROC-03**: IMetricFactory auto-attaches base labels (site, device_name, device_ip, device_type) to every metric
 - [ ] **PROC-04**: Role:Label OID values become additional labels on all metrics from the same PollDefinitionDto
 - [ ] **PROC-05**: Branch B updates State Vector with domain object + timestamp + correlationId (Source=Module only)
-- [ ] **PROC-06**: Source-based routing: Module → Branch A + Branch B; Configuration → Branch A only
-- [ ] **PROC-07**: State Vector is in-memory, no persistence, no TTL — last state only, rebuilt on restart
+- [ ] **PROC-06**: Source-based routing: Module -> Branch A + Branch B; Configuration -> Branch A only
+- [ ] **PROC-07**: State Vector is in-memory, no persistence, no TTL -- last state only, rebuilt on restart
 - [ ] **PROC-08**: One metric creation failure does not block State Vector update and vice versa
 
 ### Scheduling
@@ -51,7 +51,7 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 - [ ] **SCHED-06**: Heartbeat OID is read from Simetra module's trap definition (single source of truth)
 - [ ] **SCHED-07**: Correlation job generates new correlationId + stamps liveness vector at configurable interval
 - [ ] **SCHED-08**: All jobs read correlationId before execution and stamp liveness vector on completion
-- [ ] **SCHED-09**: Skipped job (due to DisallowConcurrentExecution) produces no new stamp → detected by liveness probe
+- [ ] **SCHED-09**: Skipped job (due to DisallowConcurrentExecution) produces no new stamp -> detected by liveness probe
 - [ ] **SCHED-10**: Quartz misfire handling uses DoNothing (skip stale, wait for next trigger)
 
 ### High Availability
@@ -62,7 +62,7 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 - [ ] **HA-04**: Role-gated exporter pattern (decorator wrapping BaseExporter, checking IsLeader on each Export call)
 - [ ] **HA-05**: On SIGTERM, leader explicitly releases lease for near-instant failover
 - [ ] **HA-06**: All pods execute same business logic and maintain identical internal state
-- [ ] **HA-07**: Role can change at runtime (follower → leader on failover) — exporter gating is dynamic
+- [ ] **HA-07**: Role can change at runtime (follower -> leader on failover) -- exporter gating is dynamic
 
 ### Health Monitoring
 
@@ -70,21 +70,21 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 - [ ] **HLTH-02**: Liveness vector NOT stamped by incoming traps (only scheduled jobs)
 - [ ] **HLTH-03**: K8s startup probe returns healthy once pipeline is wired and first correlationId exists
 - [ ] **HLTH-04**: K8s readiness probe checks all device channels open + Quartz scheduler running
-- [ ] **HLTH-05**: K8s liveness probe HTTP handler checks liveness vector — stale stamps → 503 with diagnostic log
-- [ ] **HLTH-06**: Staleness threshold: tenant stamp age < (tenant's interval × GraceMultiplier)
+- [ ] **HLTH-05**: K8s liveness probe HTTP handler checks liveness vector -- stale stamps -> 503 with diagnostic log
+- [ ] **HLTH-06**: Staleness threshold: tenant stamp age < (tenant's interval x GraceMultiplier)
 - [ ] **HLTH-07**: Healthy liveness check returns 200 silently (no log)
 - [ ] **HLTH-08**: Heartbeat send job stamps liveness vector (proves scheduler alive)
 - [ ] **HLTH-09**: Heartbeat arrival updates Simetra tenant in State Vector (informational in this milestone)
 
 ### Telemetry
 
-- [ ] **TELEM-01**: OpenTelemetry MeterProvider for .NET runtime metrics (CPU, memory, GC, thread pool) — leader only
+- [ ] **TELEM-01**: OpenTelemetry MeterProvider for .NET runtime metrics (CPU, memory, GC, thread pool) -- leader only
 - [ ] **TELEM-02**: SNMP-derived metrics exported to OTLP with base labels + Role:Label values
-- [ ] **TELEM-03**: Structured logging via OTLP log exporter — all logs include site name, role, correlationId
+- [ ] **TELEM-03**: Structured logging via OTLP log exporter -- all logs include site name, role, correlationId
 - [ ] **TELEM-04**: Log exporter active on all pods (leader and followers)
-- [ ] **TELEM-05**: Distributed tracing via OTLP trace exporter — leader only
+- [ ] **TELEM-05**: Distributed tracing via OTLP trace exporter -- leader only
 - [ ] **TELEM-06**: Console logging configurable via EnableConsole flag (sends logs to stdout)
-- [ ] **TELEM-07**: EnumMap values NOT reported to OTLP — raw SNMP integers are always metric values
+- [ ] **TELEM-07**: EnumMap values NOT reported to OTLP -- raw SNMP integers are always metric values
 
 ### Configuration
 
@@ -107,8 +107,8 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 - [ ] **PLUG-02**: Each module contains: device type, trap definitions (PollDefinitionDto), state polls, channel
 - [ ] **PLUG-03**: Simetra virtual device module with heartbeat trap definition (Source=Module)
 - [ ] **PLUG-04**: Simetra module hardcoded in code, not in appsettings.json Devices[] array
-- [ ] **PLUG-05**: Simetra module flows through full pipeline uniformly — no special-case branches
-- [ ] **PLUG-06**: Adding new device type requires: new module class + config entry + registration — no existing code changes
+- [ ] **PLUG-05**: Simetra module flows through full pipeline uniformly -- no special-case branches
+- [ ] **PLUG-06**: Adding new device type requires: new module class + config entry + registration -- no existing code changes
 
 ### Lifecycle
 
@@ -116,9 +116,9 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 - [ ] **LIFE-02**: First correlationId generated directly on startup before any job fires (not via scheduler)
 - [ ] **LIFE-03**: Startup merges hardcoded (Source=Module) + configurable (Source=Configuration) poll definitions per device
 - [ ] **LIFE-04**: Graceful shutdown with CancellationToken and time-budgeted steps totaling ~30s
-- [ ] **LIFE-05**: Shutdown order: release lease → stop listener → stop scheduler → drain channels → flush telemetry
+- [ ] **LIFE-05**: Shutdown order: release lease -> stop listener -> stop scheduler -> drain channels -> flush telemetry
 - [ ] **LIFE-06**: Each shutdown step has bounded time budget; if exceeded, abandon and move to next step
-- [ ] **LIFE-07**: Telemetry flush is protected — gets its own budget regardless of prior step outcomes
+- [ ] **LIFE-07**: Telemetry flush is protected -- gets its own budget regardless of prior step outcomes
 
 ### Testing
 
@@ -182,13 +182,107 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated during roadmap creation) | | |
+| CONF-01 | Phase 1 | Pending |
+| CONF-02 | Phase 1 | Pending |
+| CONF-03 | Phase 1 | Pending |
+| CONF-04 | Phase 1 | Pending |
+| CONF-05 | Phase 1 | Pending |
+| CONF-06 | Phase 1 | Pending |
+| CONF-07 | Phase 1 | Pending |
+| CONF-08 | Phase 1 | Pending |
+| CONF-09 | Phase 1 | Pending |
+| CONF-10 | Phase 1 | Pending |
+| CONF-11 | Phase 1 | Pending |
+| CONF-12 | Phase 1 | Pending |
+| EXTR-01 | Phase 2 | Pending |
+| EXTR-02 | Phase 2 | Pending |
+| EXTR-03 | Phase 2 | Pending |
+| EXTR-04 | Phase 2 | Pending |
+| EXTR-05 | Phase 2 | Pending |
+| EXTR-06 | Phase 2 | Pending |
+| EXTR-07 | Phase 2 | Pending |
+| EXTR-08 | Phase 2 | Pending |
+| EXTR-09 | Phase 2 | Pending |
+| PIPE-01 | Phase 3 | Pending |
+| PIPE-02 | Phase 3 | Pending |
+| PIPE-03 | Phase 3 | Pending |
+| PIPE-04 | Phase 3 | Pending |
+| PIPE-05 | Phase 3 | Pending |
+| PIPE-06 | Phase 3 | Pending |
+| PIPE-07 | Phase 3 | Pending |
+| PIPE-08 | Phase 3 | Pending |
+| PROC-01 | Phase 4 | Pending |
+| PROC-02 | Phase 4 | Pending |
+| PROC-03 | Phase 4 | Pending |
+| PROC-04 | Phase 4 | Pending |
+| PROC-05 | Phase 4 | Pending |
+| PROC-06 | Phase 4 | Pending |
+| PROC-07 | Phase 4 | Pending |
+| PROC-08 | Phase 4 | Pending |
+| PLUG-01 | Phase 5 | Pending |
+| PLUG-02 | Phase 5 | Pending |
+| PLUG-03 | Phase 5 | Pending |
+| PLUG-04 | Phase 5 | Pending |
+| PLUG-05 | Phase 5 | Pending |
+| PLUG-06 | Phase 5 | Pending |
+| SCHED-01 | Phase 6 | Pending |
+| SCHED-02 | Phase 6 | Pending |
+| SCHED-03 | Phase 6 | Pending |
+| SCHED-04 | Phase 6 | Pending |
+| SCHED-05 | Phase 6 | Pending |
+| SCHED-06 | Phase 6 | Pending |
+| SCHED-07 | Phase 6 | Pending |
+| SCHED-08 | Phase 6 | Pending |
+| SCHED-09 | Phase 6 | Pending |
+| SCHED-10 | Phase 6 | Pending |
+| LIFE-02 | Phase 6 | Pending |
+| TELEM-01 | Phase 7 | Pending |
+| TELEM-02 | Phase 7 | Pending |
+| TELEM-03 | Phase 7 | Pending |
+| TELEM-04 | Phase 7 | Pending |
+| TELEM-05 | Phase 7 | Pending |
+| TELEM-06 | Phase 7 | Pending |
+| TELEM-07 | Phase 7 | Pending |
+| HA-01 | Phase 8 | Pending |
+| HA-02 | Phase 8 | Pending |
+| HA-03 | Phase 8 | Pending |
+| HA-04 | Phase 8 | Pending |
+| HA-05 | Phase 8 | Pending |
+| HA-06 | Phase 8 | Pending |
+| HA-07 | Phase 8 | Pending |
+| HLTH-01 | Phase 9 | Pending |
+| HLTH-02 | Phase 9 | Pending |
+| HLTH-03 | Phase 9 | Pending |
+| HLTH-04 | Phase 9 | Pending |
+| HLTH-05 | Phase 9 | Pending |
+| HLTH-06 | Phase 9 | Pending |
+| HLTH-07 | Phase 9 | Pending |
+| HLTH-08 | Phase 9 | Pending |
+| HLTH-09 | Phase 9 | Pending |
+| LIFE-01 | Phase 9 | Pending |
+| LIFE-03 | Phase 9 | Pending |
+| LIFE-04 | Phase 9 | Pending |
+| LIFE-05 | Phase 9 | Pending |
+| LIFE-06 | Phase 9 | Pending |
+| LIFE-07 | Phase 9 | Pending |
+| TEST-01 | Phase 10 | Pending |
+| TEST-02 | Phase 10 | Pending |
+| TEST-03 | Phase 10 | Pending |
+| TEST-04 | Phase 10 | Pending |
+| TEST-05 | Phase 10 | Pending |
+| TEST-06 | Phase 10 | Pending |
+| TEST-07 | Phase 10 | Pending |
+| TEST-08 | Phase 10 | Pending |
+| TEST-09 | Phase 10 | Pending |
+| TEST-10 | Phase 10 | Pending |
+| TEST-11 | Phase 10 | Pending |
+| TEST-12 | Phase 10 | Pending |
 
 **Coverage:**
-- v1 requirements: 88 total
-- Mapped to phases: 0
-- Unmapped: 88
+- v1 requirements: 95 total
+- Mapped to phases: 95
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-15*
-*Last updated: 2026-02-15 after initial definition*
+*Last updated: 2026-02-15 after roadmap creation (traceability populated)*
