@@ -1,7 +1,9 @@
 using Microsoft.Extensions.Options;
+using Quartz;
 using Simetra.Configuration;
 using Simetra.Configuration.Validators;
 using Simetra.Devices;
+using Simetra.Jobs;
 using Simetra.Pipeline;
 using Simetra.Pipeline.Middleware;
 using Simetra.Services;
@@ -172,6 +174,125 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IMetricFactory, MetricFactory>();
         services.AddSingleton<IStateVectorService, StateVectorService>();
         services.AddSingleton<IProcessingCoordinator, ProcessingCoordinator>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Registers the Quartz.NET scheduler, all job types, liveness vector service,
+    /// and poll definition registry. Configures static jobs (heartbeat, correlation) and
+    /// dynamic jobs (state polls from modules, metric polls from configuration) with
+    /// appropriate triggers and misfire handling.
+    /// Must be called after <see cref="AddSnmpPipeline"/> and <see cref="AddDeviceModules"/>.
+    /// </summary>
+    public static IServiceCollection AddScheduling(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        // --- Phase 6 services ---
+        services.AddSingleton<ILivenessVectorService, LivenessVectorService>();
+        services.AddSingleton<IPollDefinitionRegistry, PollDefinitionRegistry>();
+
+        // --- Bind options for trigger intervals ---
+        var heartbeatOptions = new HeartbeatJobOptions();
+        configuration.GetSection(HeartbeatJobOptions.SectionName).Bind(heartbeatOptions);
+
+        var correlationOptions = new CorrelationJobOptions();
+        configuration.GetSection(CorrelationJobOptions.SectionName).Bind(correlationOptions);
+
+        // --- Read device configuration for dynamic poll job registration ---
+        var devicesOptions = new DevicesOptions();
+        configuration.GetSection(DevicesOptions.SectionName).Bind(devicesOptions.Devices);
+
+        services.AddQuartz(q =>
+        {
+            q.UseInMemoryStore();
+            q.UseDefaultThreadPool(maxConcurrency: 10);
+
+            // --- Static jobs: Heartbeat ---
+            // NOTE on misfire handling (SCHED-10): All triggers use
+            // WithMisfireHandlingInstructionNextWithRemainingCount(). This is the
+            // correct SimpleTrigger instruction for "skip stale fires, wait for next."
+            // The "DoNothing" instruction ONLY exists on CronTrigger and is NOT available
+            // on SimpleTrigger. For indefinite RepeatForever triggers, NextWithRemainingCount
+            // provides identical semantics. See 06-RESEARCH.md Pitfall 3 for details.
+            var heartbeatKey = new JobKey("heartbeat");
+            q.AddJob<HeartbeatJob>(j => j.WithIdentity(heartbeatKey));
+            q.AddTrigger(t => t
+                .ForJob(heartbeatKey)
+                .WithIdentity("heartbeat-trigger")
+                .StartNow()
+                .WithSimpleSchedule(s => s
+                    .WithIntervalInSeconds(heartbeatOptions.IntervalSeconds)
+                    .RepeatForever()
+                    .WithMisfireHandlingInstructionNextWithRemainingCount()));
+
+            // --- Static jobs: Correlation ---
+            var correlationKey = new JobKey("correlation");
+            q.AddJob<CorrelationJob>(j => j.WithIdentity(correlationKey));
+            q.AddTrigger(t => t
+                .ForJob(correlationKey)
+                .WithIdentity("correlation-trigger")
+                .StartNow()
+                .WithSimpleSchedule(s => s
+                    .WithIntervalInSeconds(correlationOptions.IntervalSeconds)
+                    .RepeatForever()
+                    .WithMisfireHandlingInstructionNextWithRemainingCount()));
+
+            // --- Dynamic jobs: State polls (Source=Module) ---
+            // Device modules are code-defined and known at compile time. Create instances
+            // directly for poll definition enumeration at registration time.
+            var simetraModule = new SimetraModule();
+            var allModules = new IDeviceModule[] { simetraModule };
+
+            foreach (var module in allModules)
+            {
+                foreach (var poll in module.StatePollDefinitions)
+                {
+                    var jobKey = new JobKey($"state-poll-{module.DeviceName}-{poll.MetricName}");
+                    q.AddJob<StatePollJob>(j => j
+                        .WithIdentity(jobKey)
+                        .UsingJobData("deviceName", module.DeviceName)
+                        .UsingJobData("metricName", poll.MetricName));
+
+                    q.AddTrigger(t => t
+                        .ForJob(jobKey)
+                        .WithIdentity($"state-poll-{module.DeviceName}-{poll.MetricName}-trigger")
+                        .StartNow()
+                        .WithSimpleSchedule(s => s
+                            .WithIntervalInSeconds(poll.IntervalSeconds)
+                            .RepeatForever()
+                            .WithMisfireHandlingInstructionNextWithRemainingCount()));
+                }
+            }
+
+            // --- Dynamic jobs: Metric polls (Source=Configuration) ---
+            foreach (var device in devicesOptions.Devices)
+            {
+                foreach (var poll in device.MetricPolls)
+                {
+                    var jobKey = new JobKey($"metric-poll-{device.Name}-{poll.MetricName}");
+                    q.AddJob<MetricPollJob>(j => j
+                        .WithIdentity(jobKey)
+                        .UsingJobData("deviceName", device.Name)
+                        .UsingJobData("metricName", poll.MetricName));
+
+                    q.AddTrigger(t => t
+                        .ForJob(jobKey)
+                        .WithIdentity($"metric-poll-{device.Name}-{poll.MetricName}-trigger")
+                        .StartNow()
+                        .WithSimpleSchedule(s => s
+                            .WithIntervalInSeconds(poll.IntervalSeconds)
+                            .RepeatForever()
+                            .WithMisfireHandlingInstructionNextWithRemainingCount()));
+                }
+            }
+        });
+
+        services.AddQuartzHostedService(options =>
+        {
+            options.WaitForJobsToComplete = true;
+        });
 
         return services;
     }
