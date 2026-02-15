@@ -117,6 +117,11 @@ Recent decisions affecting current work:
 - [09-02]: FlushTelemetryAsync uses independent CTS (not linked to outer token) -- telemetry flush gets full budget regardless of prior outcomes
 - [09-02]: ForceFlush consolidated from ApplicationStopping lambda into GracefulShutdownService Step 5
 - [09-02]: DI registration order finalized: Telemetry -> Configuration -> DeviceModules -> SnmpPipeline -> ProcessingPipeline -> Scheduling -> HealthChecks -> Lifecycle
+- [10-01]: TrapFilter tests use real instances with mock logger -- validates actual HashSet OID matching logic
+- [10-01]: DeviceRegistry tests use Options.Create() for direct instantiation without DI container
+- [10-01]: DeviceChannelManager backpressure test uses capacity=2 with 3 writes to verify DropOldest behavior
+- [10-01]: CompleteAll test uses WriteAsync (not TryWrite) -- TryWrite returns false silently, WriteAsync throws ChannelClosedException
+- [10-01]: TrapPipelineBuilder order test uses shared List<int> to track execution sequence
 - [10-02]: Mock IMeterFactory to return real Meter, use MeterListener for measurement capture -- avoids needing real OTLP pipeline in tests
 - [10-02]: IDisposable on MetricFactoryTests to dispose Meter and MeterListener -- prevents test pollution across test classes
 - [10-02]: Real LivenessVectorService for fresh-stamps test, Mock ILivenessVectorService for stale-stamps test -- real for simple behavior, mock for time manipulation
