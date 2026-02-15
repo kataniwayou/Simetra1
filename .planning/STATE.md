@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** The SNMP pipeline must reliably receive traps, poll devices, extract data, and emit telemetry to OTLP -- with automatic leader-follower failover ensuring no single point of failure.
-**Current focus:** Phase 3: SNMP Listener + Device Routing
+**Current focus:** Phase 3: SNMP Listener + Device Routing (complete)
 
 ## Current Position
 
 Phase: 3 of 10 (SNMP Listener + Device Routing)
-Plan: 2 of 3 in current phase
-Status: In progress
-Last activity: 2026-02-15 -- Completed 03-02-PLAN.md (middleware chain infrastructure)
+Plan: 3 of 3 in current phase
+Status: Phase complete
+Last activity: 2026-02-15 -- Completed 03-03-PLAN.md (SNMP listener service + DI wiring)
 
-Progress: [████████░░░░░░░░░░░░░░░░░░░] 7/27 (26%)
+Progress: [████████░░░░░░░░░░░░░░░░░░░] 8/27 (30%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: 3.3 min
-- Total execution time: 0.38 hours
+- Total execution time: 0.43 hours
 
 **By Phase:**
 
@@ -29,11 +29,11 @@ Progress: [████████░░░░░░░░░░░░░░░
 |-------|-------|-------|----------|
 | 01-project-foundation-configuration | 3/3 | 14 min | 4.7 min |
 | 02-domain-models-extraction-engine | 2/2 | 5 min | 2.5 min |
-| 03-snmp-listener-device-routing | 2/3 | 4 min | 2.0 min |
+| 03-snmp-listener-device-routing | 3/3 | 8 min | 2.7 min |
 
 **Recent Trend:**
-- Last 5 plans: 2 min, 3 min, 2 min, 2 min
-- Trend: stable at ~2.0 min
+- Last 5 plans: 3 min, 2 min, 2 min, 4 min
+- Trend: stable at ~2.5 min
 
 *Updated after each plan completion*
 
@@ -65,6 +65,10 @@ Recent decisions affecting current work:
 - [03-01]: DeviceRegistry uses Dictionary<IPAddress, DeviceInfo> with MapToIPv4 normalization for O(1) lookup
 - [03-01]: TrapFilter builds HashSet per definition per Match call -- avoids stale cached state
 - [03-01]: DeviceChannelManager captures logger via closure in itemDropped callback for bounded channel drops
+- [03-03]: Middleware pipeline runs before device lookup -- correlationId/logging on all traps including unknown devices
+- [03-03]: Device lookup and OID filtering are terminal logic after middleware, not middleware themselves
+- [03-03]: TrapMiddlewareDelegate registered as singleton via factory lambda resolved from ServiceProvider
+- [03-03]: ISnmpExtractor registered in DI but not consumed by listener -- poll jobs call directly (PIPE-06)
 
 ### Pending Todos
 
@@ -77,5 +81,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Completed 03-02-PLAN.md (middleware chain infrastructure)
+Stopped at: Completed 03-03-PLAN.md (SNMP listener service + DI wiring) -- Phase 3 complete
 Resume file: None
