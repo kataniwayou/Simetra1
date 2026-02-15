@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** The SNMP pipeline must reliably receive traps, poll devices, extract data, and emit telemetry to OTLP -- with automatic leader-follower failover ensuring no single point of failure.
-**Current focus:** Phase 5: Plugin System + Simetra Module (COMPLETE)
+**Current focus:** Phase 6: Scheduling System
 
 ## Current Position
 

@@ -103,12 +103,12 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 
 ### Plugin System
 
-- [ ] **PLUG-01**: IDeviceModule interface encapsulating all device-specific behavior
-- [ ] **PLUG-02**: Each module contains: device type, trap definitions (PollDefinitionDto), state polls, channel
-- [ ] **PLUG-03**: Simetra virtual device module with heartbeat trap definition (Source=Module)
-- [ ] **PLUG-04**: Simetra module hardcoded in code, not in appsettings.json Devices[] array
-- [ ] **PLUG-05**: Simetra module flows through full pipeline uniformly -- no special-case branches
-- [ ] **PLUG-06**: Adding new device type requires: new module class + config entry + registration -- no existing code changes
+- [x] **PLUG-01**: IDeviceModule interface encapsulating all device-specific behavior
+- [x] **PLUG-02**: Each module contains: device type, trap definitions (PollDefinitionDto), state polls, channel
+- [x] **PLUG-03**: Simetra virtual device module with heartbeat trap definition (Source=Module)
+- [x] **PLUG-04**: Simetra module hardcoded in code, not in appsettings.json Devices[] array
+- [x] **PLUG-05**: Simetra module flows through full pipeline uniformly -- no special-case branches
+- [x] **PLUG-06**: Adding new device type requires: new module class + config entry + registration -- no existing code changes
 
 ### Lifecycle
 
@@ -219,12 +219,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PROC-06 | Phase 4 | Complete |
 | PROC-07 | Phase 4 | Complete |
 | PROC-08 | Phase 4 | Complete |
-| PLUG-01 | Phase 5 | Pending |
-| PLUG-02 | Phase 5 | Pending |
-| PLUG-03 | Phase 5 | Pending |
-| PLUG-04 | Phase 5 | Pending |
-| PLUG-05 | Phase 5 | Pending |
-| PLUG-06 | Phase 5 | Pending |
+| PLUG-01 | Phase 5 | Complete |
+| PLUG-02 | Phase 5 | Complete |
+| PLUG-03 | Phase 5 | Complete |
+| PLUG-04 | Phase 5 | Complete |
+| PLUG-05 | Phase 5 | Complete |
+| PLUG-06 | Phase 5 | Complete |
 | SCHED-01 | Phase 6 | Pending |
 | SCHED-02 | Phase 6 | Pending |
 | SCHED-03 | Phase 6 | Pending |
