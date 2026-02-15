@@ -32,14 +32,14 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 
 ### Processing
 
-- [ ] **PROC-01**: Branch A creates metrics from each Role:Metric OID -- metric name: {MetricName}_{Property}
-- [ ] **PROC-02**: Branch A sends metrics to OTLP (leader only, gated by role)
-- [ ] **PROC-03**: IMetricFactory auto-attaches base labels (site, device_name, device_ip, device_type) to every metric
-- [ ] **PROC-04**: Role:Label OID values become additional labels on all metrics from the same PollDefinitionDto
-- [ ] **PROC-05**: Branch B updates State Vector with domain object + timestamp + correlationId (Source=Module only)
-- [ ] **PROC-06**: Source-based routing: Module -> Branch A + Branch B; Configuration -> Branch A only
-- [ ] **PROC-07**: State Vector is in-memory, no persistence, no TTL -- last state only, rebuilt on restart
-- [ ] **PROC-08**: One metric creation failure does not block State Vector update and vice versa
+- [x] **PROC-01**: Branch A creates metrics from each Role:Metric OID -- metric name: {MetricName}_{Property}
+- [x] **PROC-02**: Branch A sends metrics to OTLP (leader only, gated by role)
+- [x] **PROC-03**: IMetricFactory auto-attaches base labels (site, device_name, device_ip, device_type) to every metric
+- [x] **PROC-04**: Role:Label OID values become additional labels on all metrics from the same PollDefinitionDto
+- [x] **PROC-05**: Branch B updates State Vector with domain object + timestamp + correlationId (Source=Module only)
+- [x] **PROC-06**: Source-based routing: Module -> Branch A + Branch B; Configuration -> Branch A only
+- [x] **PROC-07**: State Vector is in-memory, no persistence, no TTL -- last state only, rebuilt on restart
+- [x] **PROC-08**: One metric creation failure does not block State Vector update and vice versa
 
 ### Scheduling
 
@@ -211,14 +211,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PIPE-06 | Phase 3 | Complete |
 | PIPE-07 | Phase 3 | Complete |
 | PIPE-08 | Phase 3 | Complete |
-| PROC-01 | Phase 4 | Pending |
-| PROC-02 | Phase 4 | Pending |
-| PROC-03 | Phase 4 | Pending |
-| PROC-04 | Phase 4 | Pending |
-| PROC-05 | Phase 4 | Pending |
-| PROC-06 | Phase 4 | Pending |
-| PROC-07 | Phase 4 | Pending |
-| PROC-08 | Phase 4 | Pending |
+| PROC-01 | Phase 4 | Complete |
+| PROC-02 | Phase 4 | Complete |
+| PROC-03 | Phase 4 | Complete |
+| PROC-04 | Phase 4 | Complete |
+| PROC-05 | Phase 4 | Complete |
+| PROC-06 | Phase 4 | Complete |
+| PROC-07 | Phase 4 | Complete |
+| PROC-08 | Phase 4 | Complete |
 | PLUG-01 | Phase 5 | Pending |
 | PLUG-02 | Phase 5 | Pending |
 | PLUG-03 | Phase 5 | Pending |
