@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Options;
 using Simetra.Configuration;
 using Simetra.Configuration.Validators;
+using Simetra.Devices;
 using Simetra.Pipeline;
 using Simetra.Pipeline.Middleware;
 using Simetra.Services;
@@ -104,6 +105,23 @@ public static class ServiceCollectionExtensions
                 }
             }
         });
+
+        return services;
+    }
+
+    /// <summary>
+    /// Registers all device module implementations as <see cref="IDeviceModule"/> singletons.
+    /// Must be called before <see cref="AddSnmpPipeline"/> so that
+    /// <c>IEnumerable&lt;IDeviceModule&gt;</c> is available when DeviceRegistry and
+    /// DeviceChannelManager resolve.
+    /// </summary>
+    public static IServiceCollection AddDeviceModules(this IServiceCollection services)
+    {
+        services.AddSingleton<IDeviceModule, SimetraModule>();
+
+        // Future modules:
+        // services.AddSingleton<IDeviceModule, RouterModule>();
+        // services.AddSingleton<IDeviceModule, SwitchModule>();
 
         return services;
     }
