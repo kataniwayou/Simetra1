@@ -1,7 +1,8 @@
+using Simetra.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuration binding will be added in Plan 02
-// builder.Services.AddSimetraConfiguration(builder.Configuration);
+builder.Services.AddSimetraConfiguration(builder.Configuration);
 
 builder.Services.AddHealthChecks();
 
