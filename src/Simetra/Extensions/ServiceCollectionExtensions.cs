@@ -11,6 +11,7 @@ using Quartz;
 using Simetra.Configuration;
 using Simetra.Configuration.Validators;
 using Simetra.Devices;
+using Simetra.HealthChecks;
 using Simetra.Jobs;
 using Simetra.Pipeline;
 using Simetra.Pipeline.Middleware;
@@ -345,6 +346,12 @@ public static class ServiceCollectionExtensions
         var devicesOptions = new DevicesOptions();
         configuration.GetSection(DevicesOptions.SectionName).Bind(devicesOptions.Devices);
 
+        // --- Job interval registry (Phase 9) ---
+        // Populated during registration so LivenessHealthCheck can compute per-job
+        // staleness thresholds. Created inline because interval values are only
+        // available here in AddScheduling, not during DI resolution.
+        var intervalRegistry = new JobIntervalRegistry();
+
         services.AddQuartz(q =>
         {
             q.UseInMemoryStore();
@@ -367,6 +374,7 @@ public static class ServiceCollectionExtensions
                     .WithIntervalInSeconds(heartbeatOptions.IntervalSeconds)
                     .RepeatForever()
                     .WithMisfireHandlingInstructionNextWithRemainingCount()));
+            intervalRegistry.Register("heartbeat", heartbeatOptions.IntervalSeconds);
 
             // --- Static jobs: Correlation ---
             var correlationKey = new JobKey("correlation");
@@ -379,6 +387,7 @@ public static class ServiceCollectionExtensions
                     .WithIntervalInSeconds(correlationOptions.IntervalSeconds)
                     .RepeatForever()
                     .WithMisfireHandlingInstructionNextWithRemainingCount()));
+            intervalRegistry.Register("correlation", correlationOptions.IntervalSeconds);
 
             // --- Dynamic jobs: State polls (Source=Module) ---
             // Device modules are code-defined and known at compile time. Create instances
@@ -404,6 +413,7 @@ public static class ServiceCollectionExtensions
                             .WithIntervalInSeconds(poll.IntervalSeconds)
                             .RepeatForever()
                             .WithMisfireHandlingInstructionNextWithRemainingCount()));
+                    intervalRegistry.Register($"state-poll-{module.DeviceName}-{poll.MetricName}", poll.IntervalSeconds);
                 }
             }
 
@@ -426,14 +436,33 @@ public static class ServiceCollectionExtensions
                             .WithIntervalInSeconds(poll.IntervalSeconds)
                             .RepeatForever()
                             .WithMisfireHandlingInstructionNextWithRemainingCount()));
+                    intervalRegistry.Register($"metric-poll-{device.Name}-{poll.MetricName}", poll.IntervalSeconds);
                 }
             }
         });
+
+        services.AddSingleton<IJobIntervalRegistry>(intervalRegistry);
 
         services.AddQuartzHostedService(options =>
         {
             options.WaitForJobsToComplete = true;
         });
+
+        return services;
+    }
+
+    /// <summary>
+    /// Registers the three Kubernetes health probe checks (startup, readiness, liveness)
+    /// with tag-based filtering. Must be called after <see cref="AddScheduling"/> so that
+    /// <see cref="IJobIntervalRegistry"/> is already registered.
+    /// DI order: Telemetry -> Configuration -> DeviceModules -> SnmpPipeline -> ProcessingPipeline -> Scheduling -> HealthChecks.
+    /// </summary>
+    public static IServiceCollection AddSimetraHealthChecks(this IServiceCollection services)
+    {
+        services.AddHealthChecks()
+            .AddCheck<StartupHealthCheck>("startup", tags: new[] { "startup" })
+            .AddCheck<ReadinessHealthCheck>("readiness", tags: new[] { "ready" })
+            .AddCheck<LivenessHealthCheck>("liveness", tags: new[] { "live" });
 
         return services;
     }

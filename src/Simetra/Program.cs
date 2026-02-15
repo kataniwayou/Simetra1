@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Simetra.Extensions;
@@ -11,8 +13,7 @@ builder.Services.AddDeviceModules();
 builder.Services.AddSnmpPipeline();
 builder.Services.AddProcessingPipeline();
 builder.Services.AddScheduling(builder.Configuration);
-
-builder.Services.AddHealthChecks();
+builder.Services.AddSimetraHealthChecks();
 
 var app = builder.Build();
 
@@ -33,9 +34,36 @@ app.Lifetime.ApplicationStopping.Register(() =>
     tracerProvider?.ForceFlush(timeoutMilliseconds: 5000);
 });
 
-// Health probe endpoints (skeleton -- actual checks added in Phase 9)
-app.MapHealthChecks("/healthz/startup");
-app.MapHealthChecks("/healthz/ready");
-app.MapHealthChecks("/healthz/live");
+// Health probe endpoints with tag-filtered checks and explicit status codes.
+// Each endpoint runs only the health check(s) matching its tag.
+app.MapHealthChecks("/healthz/startup", new HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("startup"),
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+    }
+});
+
+app.MapHealthChecks("/healthz/ready", new HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("ready"),
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+    }
+});
+
+app.MapHealthChecks("/healthz/live", new HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("live"),
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+    }
+});
 
 app.Run();
