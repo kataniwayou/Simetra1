@@ -134,7 +134,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddSnmpPipeline(this IServiceCollection services)
     {
         // Pipeline infrastructure (singletons -- live for app lifetime)
-        services.AddSingleton<ICorrelationService, StartupCorrelationService>();
+        services.AddSingleton<ICorrelationService, RotatingCorrelationService>();
         services.AddSingleton<IDeviceRegistry, DeviceRegistry>();
         services.AddSingleton<ITrapFilter, TrapFilter>();
         services.AddSingleton<IDeviceChannelManager, DeviceChannelManager>();

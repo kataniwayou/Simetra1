@@ -4,7 +4,8 @@ using System.Net;
 namespace Simetra.Pipeline;
 
 /// <summary>
-/// Provides O(1) device lookup by IP address for incoming SNMP traps.
+/// Provides O(1) device lookup by IP address (for incoming SNMP traps) and by device
+/// name (for poll jobs that receive device name from Quartz JobDataMap).
 /// </summary>
 public interface IDeviceRegistry
 {
@@ -16,4 +17,14 @@ public interface IDeviceRegistry
     /// <param name="device">The device info if found; null otherwise.</param>
     /// <returns>True if the device was found; false otherwise.</returns>
     bool TryGetDevice(IPAddress senderIp, [NotNullWhen(true)] out DeviceInfo? device);
+
+    /// <summary>
+    /// Attempts to find a registered device by its configured name.
+    /// Used by poll jobs that know the device name from their Quartz JobDataMap.
+    /// Lookup is case-insensitive (device names are user-configured).
+    /// </summary>
+    /// <param name="deviceName">The device name to look up.</param>
+    /// <param name="device">The device info if found; null otherwise.</param>
+    /// <returns>True if the device was found; false otherwise.</returns>
+    bool TryGetDeviceByName(string deviceName, [NotNullWhen(true)] out DeviceInfo? device);
 }

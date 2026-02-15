@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Lextm.SharpSnmpLib" Version="12.5.7" />
+    <PackageReference Include="Quartz.AspNetCore" Version="3.15.1" />
   </ItemGroup>
 
 </Project>
