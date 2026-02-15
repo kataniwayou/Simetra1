@@ -20,15 +20,15 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 
 ### Extraction
 
-- [ ] **EXTR-01**: Unified PollDefinitionDto structure used for trap definitions, state polls, and metric polls
-- [ ] **EXTR-02**: PollDefinitionDto contains: MetricName (prefix), MetricType (Gauge/Counter), Oids[], IntervalSeconds, Source
-- [ ] **EXTR-03**: Each OID entry has: OID, PropertyName, Role (Metric/Label), optional EnumMap
-- [ ] **EXTR-04**: Role:Metric produces metric value from raw SNMP integer; EnumMap stored as metadata only (Grafana value mappings)
-- [ ] **EXTR-05**: Role:Label produces label on all metrics from this DTO; value is enum-mapped string or raw string
-- [ ] **EXTR-06**: Generic extractor reads Oids from PollDefinitionDto -- same logic for traps and polls, no per-device-type logic
-- [ ] **EXTR-07**: Extractor handles SNMP types: INTEGER, STRING, Counter32, Counter64, Gauge32, Timeticks, IpAddress
-- [ ] **EXTR-08**: Extractor produces strongly typed domain objects per device type (e.g. HeartbeatData)
-- [ ] **EXTR-09**: Source field set automatically at load time: code -> Module, config -> Configuration (not exposed in appsettings.json)
+- [x] **EXTR-01**: Unified PollDefinitionDto structure used for trap definitions, state polls, and metric polls
+- [x] **EXTR-02**: PollDefinitionDto contains: MetricName (prefix), MetricType (Gauge/Counter), Oids[], IntervalSeconds, Source
+- [x] **EXTR-03**: Each OID entry has: OID, PropertyName, Role (Metric/Label), optional EnumMap
+- [x] **EXTR-04**: Role:Metric produces metric value from raw SNMP integer; EnumMap stored as metadata only (Grafana value mappings)
+- [x] **EXTR-05**: Role:Label produces label on all metrics from this DTO; value is enum-mapped string or raw string
+- [x] **EXTR-06**: Generic extractor reads Oids from PollDefinitionDto -- same logic for traps and polls, no per-device-type logic
+- [x] **EXTR-07**: Extractor handles SNMP types: INTEGER, STRING, Counter32, Counter64, Gauge32, Timeticks, IpAddress
+- [x] **EXTR-08**: Extractor produces strongly typed domain objects per device type (e.g. HeartbeatData)
+- [x] **EXTR-09**: Source field set automatically at load time: code -> Module, config -> Configuration (not exposed in appsettings.json)
 
 ### Processing
 
@@ -194,15 +194,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONF-10 | Phase 1 | Complete |
 | CONF-11 | Phase 1 | Complete |
 | CONF-12 | Phase 1 | Complete |
-| EXTR-01 | Phase 2 | Pending |
-| EXTR-02 | Phase 2 | Pending |
-| EXTR-03 | Phase 2 | Pending |
-| EXTR-04 | Phase 2 | Pending |
-| EXTR-05 | Phase 2 | Pending |
-| EXTR-06 | Phase 2 | Pending |
-| EXTR-07 | Phase 2 | Pending |
-| EXTR-08 | Phase 2 | Pending |
-| EXTR-09 | Phase 2 | Pending |
+| EXTR-01 | Phase 2 | Complete |
+| EXTR-02 | Phase 2 | Complete |
+| EXTR-03 | Phase 2 | Complete |
+| EXTR-04 | Phase 2 | Complete |
+| EXTR-05 | Phase 2 | Complete |
+| EXTR-06 | Phase 2 | Complete |
+| EXTR-07 | Phase 2 | Complete |
+| EXTR-08 | Phase 2 | Complete |
+| EXTR-09 | Phase 2 | Complete |
 | PIPE-01 | Phase 3 | Pending |
 | PIPE-02 | Phase 3 | Pending |
 | PIPE-03 | Phase 3 | Pending |

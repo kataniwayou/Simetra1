@@ -13,7 +13,7 @@ Simetra is built bottom-up through its four-layer SNMP pipeline, then layered wi
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Project Foundation + Configuration** - .NET 9 scaffolding, DI wiring, options classes, appsettings.json binding
-- [ ] **Phase 2: Domain Models + Extraction Engine** - PollDefinitionDto, Role-based OID system, generic extractor, SNMP type handling
+- [x] **Phase 2: Domain Models + Extraction Engine** - PollDefinitionDto, Role-based OID system, generic extractor, SNMP type handling
 - [ ] **Phase 3: SNMP Listener + Device Routing** - UDP trap listener, device filter, trap filter, channels, middleware chain
 - [ ] **Phase 4: Processing Pipeline** - Metric creation, IMetricFactory, State Vector, source-based routing
 - [ ] **Phase 5: Plugin System + Simetra Module** - IDeviceModule interface, device registry, SimetraModule with heartbeat definition
@@ -55,8 +55,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md -- PollDefinitionDto, OidEntryDto, ExtractionResult domain models, ISnmpExtractor interface, SharpSnmpLib package
-- [ ] 02-02-PLAN.md -- TDD: SnmpExtractorService implementation with 15 test cases covering all SNMP types, roles, and EnumMap semantics
+- [x] 02-01-PLAN.md -- PollDefinitionDto, OidEntryDto, ExtractionResult domain models, ISnmpExtractor interface, SharpSnmpLib package
+- [x] 02-02-PLAN.md -- TDD: SnmpExtractorService implementation with 15 test cases covering all SNMP types, roles, and EnumMap semantics
 
 ### Phase 3: SNMP Listener + Device Routing
 **Goal**: The SNMP listener receives v2c traps on UDP, identifies the source device, filters by OID, and routes into device-specific bounded channels with backpressure monitoring -- forming Layers 1 and 2 of the pipeline
@@ -200,7 +200,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Project Foundation + Configuration | 3/3 | Complete | 2026-02-15 |
-| 2. Domain Models + Extraction Engine | 0/2 | Not started | - |
+| 2. Domain Models + Extraction Engine | 2/2 | Complete | 2026-02-15 |
 | 3. SNMP Listener + Device Routing | 0/3 | Not started | - |
 | 4. Processing Pipeline | 0/2 | Not started | - |
 | 5. Plugin System + Simetra Module | 0/2 | Not started | - |
