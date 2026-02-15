@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-15)
 
 ## Current Position
 
-Phase: 7 of 10 (Telemetry Integration) -- NOT STARTED
-Plan: 0 of 3 in current phase
-Status: Ready for planning
-Last activity: 2026-02-15 -- Completed Phase 6: Scheduling System (verified 5/5 must-haves)
+Phase: 7 of 10 (Telemetry Integration)
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-02-15 -- Completed 07-01-PLAN.md (OpenTelemetry Provider Infrastructure)
 
-Progress: [███████████████░░░░░░░░░░░░] 15/27 (56%)
+Progress: [████████████████░░░░░░░░░░░] 16/27 (59%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 15
+- Total plans completed: 16
 - Average duration: 2.7 min
-- Total execution time: 0.67 hours
+- Total execution time: 0.70 hours
 
 **By Phase:**
 
@@ -33,10 +33,11 @@ Progress: [███████████████░░░░░░░░
 | 04-processing-pipeline | 2/2 | 4 min | 2.2 min |
 | 05-plugin-system-simetra-module | 2/2 | 3 min | 1.5 min |
 | 06-scheduling-system | 3/3 | 8 min | 2.7 min |
+| 07-telemetry-integration | 1/3 | 2 min | 2.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 1 min, 5 min, 1 min, 2 min
-- Trend: stable (job implementations are focused replacements)
+- Last 5 plans: 5 min, 1 min, 2 min, 2 min
+- Trend: stable (telemetry infrastructure with focused OTel wiring)
 
 *Updated after each plan completion*
 
@@ -86,6 +87,9 @@ Recent decisions affecting current work:
 - [06-01]: SimetraModule instantiated directly in AddScheduling for compile-time module enumeration
 - [06-01]: All SimpleTriggers use WithMisfireHandlingInstructionNextWithRemainingCount (DoNothing is CronTrigger-only)
 - [06-01]: DI registration order extended: Configuration -> DeviceModules -> SnmpPipeline -> ProcessingPipeline -> Scheduling -> HealthChecks
+- [07-01]: DI registration order: Telemetry -> Configuration -> DeviceModules -> SnmpPipeline -> ProcessingPipeline -> Scheduling -> HealthChecks
+- [07-01]: AddSimetraTelemetry on IHostApplicationBuilder (not IServiceCollection) -- registered first = disposed last for ForceFlush
+- [07-01]: RoleGatedExporter returns ExportResult.Success when follower -- prevents SDK retry backoff on non-leaders
 - [06-03]: Task.Run wraps synchronous Messenger.SendTrapV2 -- avoids blocking Quartz thread pool
 - [06-03]: CorrelationId format is Guid.NewGuid().ToString("N") -- 32-char hex, no hyphens
 - [06-03]: Correlation rotation logged at Information level -- operational visibility for ID transitions
@@ -101,5 +105,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Completed Phase 6: Scheduling System (all 3 plans verified, 5/5 must-haves passed)
+Stopped at: Completed 07-01-PLAN.md (OpenTelemetry Provider Infrastructure)
 Resume file: None
