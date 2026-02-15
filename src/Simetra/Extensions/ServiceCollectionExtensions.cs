@@ -1,4 +1,7 @@
 using Microsoft.Extensions.Options;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Quartz;
 using Simetra.Configuration;
 using Simetra.Configuration.Validators;
@@ -7,6 +10,7 @@ using Simetra.Jobs;
 using Simetra.Pipeline;
 using Simetra.Pipeline.Middleware;
 using Simetra.Services;
+using Simetra.Telemetry;
 
 namespace Simetra.Extensions;
 
@@ -15,6 +19,33 @@ namespace Simetra.Extensions;
 /// </summary>
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Registers OpenTelemetry MeterProvider and TracerProvider with OTLP exporters,
+    /// plus the ILeaderElection abstraction. Must be called FIRST in DI registration
+    /// (registered first = disposed last, ensuring ForceFlush during shutdown).
+    /// </summary>
+    public static IHostApplicationBuilder AddSimetraTelemetry(
+        this IHostApplicationBuilder builder)
+    {
+        var otlpOptions = new OtlpOptions { Endpoint = "", ServiceName = "" };
+        builder.Configuration.GetSection(OtlpOptions.SectionName).Bind(otlpOptions);
+
+        builder.Services.AddSingleton<ILeaderElection, AlwaysLeaderElection>();
+
+        builder.Services.AddOpenTelemetry()
+            .ConfigureResource(resource => resource
+                .AddService(serviceName: otlpOptions.ServiceName))
+            .WithMetrics(metrics => metrics
+                .AddMeter(TelemetryConstants.MeterName)
+                .AddRuntimeInstrumentation()
+                .AddOtlpExporter(o => o.Endpoint = new Uri(otlpOptions.Endpoint)))
+            .WithTracing(tracing => tracing
+                .AddSource(TelemetryConstants.TracingSourceName)
+                .AddOtlpExporter(o => o.Endpoint = new Uri(otlpOptions.Endpoint)));
+
+        return builder;
+    }
+
     /// <summary>
     /// Registers all Simetra configuration Options classes, validators, and PostConfigure
     /// callbacks. All options use ValidateOnStart for fail-fast behavior.

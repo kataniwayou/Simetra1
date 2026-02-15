@@ -3,6 +3,7 @@ using Simetra.Pipeline;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddSimetraTelemetry();
 builder.Services.AddSimetraConfiguration(builder.Configuration);
 builder.Services.AddDeviceModules();
 builder.Services.AddSnmpPipeline();
