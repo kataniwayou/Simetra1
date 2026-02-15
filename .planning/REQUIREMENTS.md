@@ -122,18 +122,18 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 
 ### Testing
 
-- [ ] **TEST-01**: Unit tests for generic extractor (all SNMP types, Role:Metric, Role:Label, EnumMap)
-- [ ] **TEST-02**: Unit tests for PollDefinitionDto validation and Source field assignment
-- [ ] **TEST-03**: Unit tests for device filter and trap filter logic
-- [ ] **TEST-04**: Unit tests for State Vector updates and Source-based routing
-- [ ] **TEST-05**: Unit tests for IMetricFactory base label enforcement
-- [ ] **TEST-06**: Unit tests for liveness vector stamping and staleness detection
-- [ ] **TEST-07**: Unit tests for correlation ID generation and propagation
-- [ ] **TEST-08**: Unit tests for channel backpressure (drop-oldest behavior, itemDropped callback)
-- [ ] **TEST-09**: Unit tests for middleware chain composition and execution order
-- [ ] **TEST-10**: Unit tests for K8s health probe HTTP handlers (startup, readiness, liveness)
-- [ ] **TEST-11**: Unit tests for graceful shutdown ordering and time budget enforcement
-- [ ] **TEST-12**: Unit tests for role-gated exporter pattern (leader/follower switching)
+- [x] **TEST-01**: Unit tests for generic extractor (all SNMP types, Role:Metric, Role:Label, EnumMap)
+- [x] **TEST-02**: Unit tests for PollDefinitionDto validation and Source field assignment
+- [x] **TEST-03**: Unit tests for device filter and trap filter logic
+- [x] **TEST-04**: Unit tests for State Vector updates and Source-based routing
+- [x] **TEST-05**: Unit tests for IMetricFactory base label enforcement
+- [x] **TEST-06**: Unit tests for liveness vector stamping and staleness detection
+- [x] **TEST-07**: Unit tests for correlation ID generation and propagation
+- [x] **TEST-08**: Unit tests for channel backpressure (drop-oldest behavior, itemDropped callback)
+- [x] **TEST-09**: Unit tests for middleware chain composition and execution order
+- [x] **TEST-10**: Unit tests for K8s health probe HTTP handlers (startup, readiness, liveness)
+- [x] **TEST-11**: Unit tests for graceful shutdown ordering and time budget enforcement
+- [x] **TEST-12**: Unit tests for role-gated exporter pattern (leader/follower switching)
 
 ## v2 Requirements
 
@@ -265,18 +265,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LIFE-05 | Phase 9 | Complete |
 | LIFE-06 | Phase 9 | Complete |
 | LIFE-07 | Phase 9 | Complete |
-| TEST-01 | Phase 10 | Pending |
-| TEST-02 | Phase 10 | Pending |
-| TEST-03 | Phase 10 | Pending |
-| TEST-04 | Phase 10 | Pending |
-| TEST-05 | Phase 10 | Pending |
-| TEST-06 | Phase 10 | Pending |
-| TEST-07 | Phase 10 | Pending |
-| TEST-08 | Phase 10 | Pending |
-| TEST-09 | Phase 10 | Pending |
-| TEST-10 | Phase 10 | Pending |
-| TEST-11 | Phase 10 | Pending |
-| TEST-12 | Phase 10 | Pending |
+| TEST-01 | Phase 10 | Complete |
+| TEST-02 | Phase 10 | Complete |
+| TEST-03 | Phase 10 | Complete |
+| TEST-04 | Phase 10 | Complete |
+| TEST-05 | Phase 10 | Complete |
+| TEST-06 | Phase 10 | Complete |
+| TEST-07 | Phase 10 | Complete |
+| TEST-08 | Phase 10 | Complete |
+| TEST-09 | Phase 10 | Complete |
+| TEST-10 | Phase 10 | Complete |
+| TEST-11 | Phase 10 | Complete |
+| TEST-12 | Phase 10 | Complete |
 
 **Coverage:**
 - v1 requirements: 95 total
