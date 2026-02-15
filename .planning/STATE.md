@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** The SNMP pipeline must reliably receive traps, poll devices, extract data, and emit telemetry to OTLP -- with automatic leader-follower failover ensuring no single point of failure.
-**Current focus:** Phase 7: Telemetry Integration
+**Current focus:** Phase 8: High Availability
 
 ## Current Position
 
 Phase: 7 of 10 (Telemetry Integration)
-Plan: 1 of 3 in current phase
-Status: In progress
-Last activity: 2026-02-15 -- Completed 07-01-PLAN.md (OpenTelemetry Provider Infrastructure)
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-02-15 -- Completed 07-02-PLAN.md (Log Enrichment, OTLP Log Export, ForceFlush)
 
-Progress: [████████████████░░░░░░░░░░░] 16/27 (59%)
+Progress: [█████████████████░░░░░░░░░░] 17/27 (63%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 16
-- Average duration: 2.7 min
-- Total execution time: 0.70 hours
+- Total plans completed: 17
+- Average duration: 2.6 min
+- Total execution time: 0.73 hours
 
 **By Phase:**
 
@@ -33,11 +33,11 @@ Progress: [████████████████░░░░░░░
 | 04-processing-pipeline | 2/2 | 4 min | 2.2 min |
 | 05-plugin-system-simetra-module | 2/2 | 3 min | 1.5 min |
 | 06-scheduling-system | 3/3 | 8 min | 2.7 min |
-| 07-telemetry-integration | 1/3 | 2 min | 2.0 min |
+| 07-telemetry-integration | 2/2 | 4 min | 2.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 5 min, 1 min, 2 min, 2 min
-- Trend: stable (telemetry infrastructure with focused OTel wiring)
+- Last 5 plans: 1 min, 2 min, 2 min, 2 min
+- Trend: stable (telemetry phase complete with focused OTel wiring)
 
 *Updated after each plan completion*
 
@@ -90,6 +90,11 @@ Recent decisions affecting current work:
 - [07-01]: DI registration order: Telemetry -> Configuration -> DeviceModules -> SnmpPipeline -> ProcessingPipeline -> Scheduling -> HealthChecks
 - [07-01]: AddSimetraTelemetry on IHostApplicationBuilder (not IServiceCollection) -- registered first = disposed last for ForceFlush
 - [07-01]: RoleGatedExporter returns ExportResult.Success when follower -- prevents SDK retry backoff on non-leaders
+- [07-02]: Factory overload AddProcessor(Func<IServiceProvider, BaseProcessor<LogRecord>>) for DI resolution at runtime
+- [07-02]: Func<string> roleProvider delegate on processor to track runtime role changes without reconstruction
+- [07-02]: ClearProviders before AddConsole ensures EnableConsole=false produces zero stdout
+- [07-02]: OTLP log exporter not role-gated (TELEM-04) -- all pods export logs
+- [07-02]: GetService (not GetRequiredService) for ForceFlush provider resolution -- null-safe in test scenarios
 - [06-03]: Task.Run wraps synchronous Messenger.SendTrapV2 -- avoids blocking Quartz thread pool
 - [06-03]: CorrelationId format is Guid.NewGuid().ToString("N") -- 32-char hex, no hyphens
 - [06-03]: Correlation rotation logged at Information level -- operational visibility for ID transitions
@@ -105,5 +110,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Completed 07-01-PLAN.md (OpenTelemetry Provider Infrastructure)
+Stopped at: Completed 07-02-PLAN.md (Log Enrichment, OTLP Log Export, ForceFlush) -- Phase 7 complete
 Resume file: None
