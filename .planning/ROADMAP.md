@@ -181,13 +181,13 @@ Plans:
   3. Unit tests pass for pipeline components: device filter, trap filter, channel backpressure (DropOldest + itemDropped), middleware chain composition and execution order
   4. Unit tests pass for processing: State Vector updates, source-based routing, IMetricFactory base label enforcement, correlation ID generation and propagation
   5. Unit tests pass for operational concerns: liveness vector stamping and staleness detection, K8s health probe handlers, graceful shutdown ordering and time budgets, role-gated exporter pattern (leader/follower switching)
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 10-01: End-to-end heartbeat loopback integration test
-- [ ] 10-02: Unit tests for extraction and pipeline (TEST-01 through TEST-03, TEST-07 through TEST-09)
-- [ ] 10-03: Unit tests for processing and scheduling (TEST-04, TEST-05, TEST-06)
-- [ ] 10-04: Unit tests for operational concerns (TEST-10, TEST-11, TEST-12)
+- [ ] 10-01-PLAN.md -- Unit tests for extraction pipeline (TrapFilter, DeviceRegistry, CorrelationService, ChannelManager, PipelineBuilder, PollDefinitionDto)
+- [ ] 10-02-PLAN.md -- Unit tests for processing and liveness (StateVector, ProcessingCoordinator, MetricFactory, LivenessVector, LivenessHealthCheck)
+- [ ] 10-03-PLAN.md -- Unit tests for operational concerns (StartupHealthCheck, ReadinessHealthCheck, GracefulShutdown, RoleGatedExporter)
+- [ ] 10-04-PLAN.md -- End-to-end heartbeat loopback integration test and full suite verification
 
 ## Progress
 
