@@ -5,22 +5,22 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** The SNMP pipeline must reliably receive traps, poll devices, extract data, and emit telemetry to OTLP -- with automatic leader-follower failover ensuring no single point of failure.
-**Current focus:** Phase 2: Domain Models + Extraction Engine
+**Current focus:** Phase 2 complete, ready for Phase 3
 
 ## Current Position
 
 Phase: 2 of 10 (Domain Models + Extraction Engine)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-15 -- Completed 02-01-PLAN.md (domain models + ISnmpExtractor interface)
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-02-15 -- Completed 02-02-PLAN.md (SnmpExtractorService TDD implementation)
 
-Progress: [████░░░░░░░░░░░░░░░░░░░░░░░] 4/27 (15%)
+Progress: [█████░░░░░░░░░░░░░░░░░░░░░░] 5/27 (19%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 4.0 min
+- Total plans completed: 5
+- Average duration: 3.8 min
 - Total execution time: 0.3 hours
 
 **By Phase:**
@@ -28,11 +28,11 @@ Progress: [████░░░░░░░░░░░░░░░░░░░
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-project-foundation-configuration | 3/3 | 14 min | 4.7 min |
-| 02-domain-models-extraction-engine | 1/2 | 2 min | 2.0 min |
+| 02-domain-models-extraction-engine | 2/2 | 5 min | 2.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 6 min, 5 min, 3 min, 2 min
-- Trend: accelerating
+- Last 5 plans: 5 min, 3 min, 2 min, 3 min
+- Trend: stable at ~3 min
 
 *Updated after each plan completion*
 
@@ -57,6 +57,9 @@ Recent decisions affecting current work:
 - [02-01]: ReadOnlyDictionary<K,V>.Empty for ExtractionResult defaults -- allocation-free empty collections
 - [02-01]: EnumMap defensive copy via ToDictionary().AsReadOnly() -- prevents mutation of source config
 - [02-01]: ExtractionResult as sealed class with init properties -- mutable construction, immutable consumption
+- [02-02]: ExtractNumericValue/ExtractLabelValue as private static methods -- no instance state for type conversion
+- [02-02]: OID lookup via ToDictionary for O(1) per-varbind matching
+- [02-02]: Non-numeric Metric data logged at Warning and skipped -- config error, not runtime failure
 
 ### Pending Todos
 
@@ -69,5 +72,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Completed 02-01-PLAN.md, ready for 02-02
+Stopped at: Completed 02-02-PLAN.md, Phase 2 complete, ready for Phase 3
 Resume file: None
