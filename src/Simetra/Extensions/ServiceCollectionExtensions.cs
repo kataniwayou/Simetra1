@@ -1,5 +1,8 @@
+using System.Diagnostics;
 using k8s;
 using Microsoft.Extensions.Options;
+using OpenTelemetry;
+using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -77,13 +80,42 @@ public static class ServiceCollectionExtensions
         builder.Services.AddOpenTelemetry()
             .ConfigureResource(resource => resource
                 .AddService(serviceName: otlpOptions.ServiceName))
-            .WithMetrics(metrics => metrics
-                .AddMeter(TelemetryConstants.MeterName)
-                .AddRuntimeInstrumentation()
-                .AddOtlpExporter(o => o.Endpoint = new Uri(otlpOptions.Endpoint)))
-            .WithTracing(tracing => tracing
-                .AddSource(TelemetryConstants.TracingSourceName)
-                .AddOtlpExporter(o => o.Endpoint = new Uri(otlpOptions.Endpoint)));
+            .WithMetrics(metrics =>
+            {
+                metrics.AddMeter(TelemetryConstants.MeterName);
+                metrics.AddRuntimeInstrumentation();
+
+                // Manual OTLP metric exporter wrapped in RoleGatedExporter.
+                // Cannot use AddOtlpExporter() because it creates and registers the exporter
+                // internally, preventing wrapping with RoleGatedExporter. (HA-03, HA-04)
+                metrics.AddReader(sp =>
+                {
+                    var leaderElection = sp.GetRequiredService<ILeaderElection>();
+                    var otlpExporter = new OtlpMetricExporter(new OtlpExporterOptions
+                    {
+                        Endpoint = new Uri(otlpOptions.Endpoint)
+                    });
+                    var roleGated = new RoleGatedExporter<Metric>(otlpExporter, leaderElection);
+                    return new PeriodicExportingMetricReader(roleGated);
+                });
+            })
+            .WithTracing(tracing =>
+            {
+                tracing.AddSource(TelemetryConstants.TracingSourceName);
+
+                // Manual OTLP trace exporter wrapped in RoleGatedExporter.
+                // Same rationale as metrics -- AddOtlpExporter() prevents wrapping. (HA-03, HA-04)
+                tracing.AddProcessor(sp =>
+                {
+                    var leaderElection = sp.GetRequiredService<ILeaderElection>();
+                    var otlpExporter = new OtlpTraceExporter(new OtlpExporterOptions
+                    {
+                        Endpoint = new Uri(otlpOptions.Endpoint)
+                    });
+                    var roleGated = new RoleGatedExporter<Activity>(otlpExporter, leaderElection);
+                    return new BatchActivityExportProcessor(roleGated);
+                });
+            });
 
         // --- Logging ---
         // Clear default providers (Console, Debug, EventSource) so that
