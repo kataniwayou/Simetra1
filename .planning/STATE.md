@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-15)
 ## Current Position
 
 Phase: 3 of 10 (SNMP Listener + Device Routing)
-Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-02-15 -- Phase 2 complete (verified: 11/11 must-haves, 60 tests passing, EXTR-01 through EXTR-09 satisfied)
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-02-15 -- Completed 03-01-PLAN.md (pipeline infrastructure types and services)
 
-Progress: [██████░░░░░░░░░░░░░░░░░░░░░] 5/27 (19%)
+Progress: [███████░░░░░░░░░░░░░░░░░░░░] 6/27 (22%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 3.8 min
-- Total execution time: 0.3 hours
+- Total plans completed: 6
+- Average duration: 3.5 min
+- Total execution time: 0.35 hours
 
 **By Phase:**
 
@@ -29,10 +29,11 @@ Progress: [██████░░░░░░░░░░░░░░░░░
 |-------|-------|-------|----------|
 | 01-project-foundation-configuration | 3/3 | 14 min | 4.7 min |
 | 02-domain-models-extraction-engine | 2/2 | 5 min | 2.5 min |
+| 03-snmp-listener-device-routing | 1/3 | 2 min | 2.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 5 min, 3 min, 2 min, 3 min
-- Trend: stable at ~3 min
+- Last 5 plans: 3 min, 2 min, 3 min, 2 min
+- Trend: stable at ~2.5 min
 
 *Updated after each plan completion*
 
@@ -60,6 +61,10 @@ Recent decisions affecting current work:
 - [02-02]: ExtractNumericValue/ExtractLabelValue as private static methods -- no instance state for type conversion
 - [02-02]: OID lookup via ToDictionary for O(1) per-varbind matching
 - [02-02]: Non-numeric Metric data logged at Warning and skipped -- config error, not runtime failure
+- [03-01]: TrapEnvelope.CorrelationId and MatchedDefinition mutable (get;set;) -- stamped after construction
+- [03-01]: DeviceRegistry uses Dictionary<IPAddress, DeviceInfo> with MapToIPv4 normalization for O(1) lookup
+- [03-01]: TrapFilter builds HashSet per definition per Match call -- avoids stale cached state
+- [03-01]: DeviceChannelManager captures logger via closure in itemDropped callback for bounded channel drops
 
 ### Pending Todos
 
@@ -72,5 +77,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Phase 2 complete, verified, ready to plan Phase 3
+Stopped at: Completed 03-01-PLAN.md (pipeline infrastructure types and services)
 Resume file: None
