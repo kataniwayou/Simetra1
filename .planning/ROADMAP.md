@@ -165,12 +165,11 @@ Plans:
   3. Heartbeat send job stamps liveness vector (scheduler alive proof); heartbeat arrival updates Simetra State Vector entry (pipeline flow proof, informational only in this milestone)
   4. 11-step startup sequence executes in order via IHostedService registration, merging hardcoded (Source=Module) and configurable (Source=Configuration) poll definitions per device
   5. Graceful shutdown follows the order: release lease, stop listener, stop scheduler, drain channels, flush telemetry -- each step has bounded time budget, total ~30s, and telemetry flush is protected with its own budget regardless of prior step outcomes
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 09-01: Health probe HTTP handlers (startup, readiness, liveness)
-- [ ] 09-02: 11-step startup sequence
-- [ ] 09-03: Graceful shutdown with time-budgeted steps
+- [ ] 09-01-PLAN.md -- Health probe IHealthCheck implementations (startup, readiness, liveness), IJobIntervalRegistry, DI registration, tag-filtered endpoint mapping
+- [ ] 09-02-PLAN.md -- Graceful shutdown with time-budgeted steps, channel drain API, 11-step startup documentation
 
 ### Phase 10: End-to-End Integration + Testing
 **Goal**: The complete pipeline is proven working via heartbeat loopback (trap flows through all four layers and produces metrics + State Vector update), and comprehensive unit tests cover all core logic
@@ -205,7 +204,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 6. Scheduling System | 3/3 | Complete | 2026-02-15 |
 | 7. Telemetry Integration | 2/2 | Complete | 2026-02-15 |
 | 8. High Availability | 2/2 | Complete | 2026-02-15 |
-| 9. Health Probes + Lifecycle | 0/3 | Not started | - |
+| 9. Health Probes + Lifecycle | 0/2 | Not started | - |
 | 10. End-to-End Integration + Testing | 0/4 | Not started | - |
 
 ---
