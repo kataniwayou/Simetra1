@@ -78,13 +78,13 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 
 ### Telemetry
 
-- [ ] **TELEM-01**: OpenTelemetry MeterProvider for .NET runtime metrics (CPU, memory, GC, thread pool) -- leader only
-- [ ] **TELEM-02**: SNMP-derived metrics exported to OTLP with base labels + Role:Label values
-- [ ] **TELEM-03**: Structured logging via OTLP log exporter -- all logs include site name, role, correlationId
-- [ ] **TELEM-04**: Log exporter active on all pods (leader and followers)
-- [ ] **TELEM-05**: Distributed tracing via OTLP trace exporter -- leader only
-- [ ] **TELEM-06**: Console logging configurable via EnableConsole flag (sends logs to stdout)
-- [ ] **TELEM-07**: EnumMap values NOT reported to OTLP -- raw SNMP integers are always metric values
+- [x] **TELEM-01**: OpenTelemetry MeterProvider for .NET runtime metrics (CPU, memory, GC, thread pool) -- leader only
+- [x] **TELEM-02**: SNMP-derived metrics exported to OTLP with base labels + Role:Label values
+- [x] **TELEM-03**: Structured logging via OTLP log exporter -- all logs include site name, role, correlationId
+- [x] **TELEM-04**: Log exporter active on all pods (leader and followers)
+- [x] **TELEM-05**: Distributed tracing via OTLP trace exporter -- leader only
+- [x] **TELEM-06**: Console logging configurable via EnableConsole flag (sends logs to stdout)
+- [x] **TELEM-07**: EnumMap values NOT reported to OTLP -- raw SNMP integers are always metric values
 
 ### Configuration
 
@@ -236,13 +236,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCHED-09 | Phase 6 | Complete |
 | SCHED-10 | Phase 6 | Complete |
 | LIFE-02 | Phase 6 | Complete |
-| TELEM-01 | Phase 7 | Pending |
-| TELEM-02 | Phase 7 | Pending |
-| TELEM-03 | Phase 7 | Pending |
-| TELEM-04 | Phase 7 | Pending |
-| TELEM-05 | Phase 7 | Pending |
-| TELEM-06 | Phase 7 | Pending |
-| TELEM-07 | Phase 7 | Pending |
+| TELEM-01 | Phase 7 | Complete |
+| TELEM-02 | Phase 7 | Complete |
+| TELEM-03 | Phase 7 | Complete |
+| TELEM-04 | Phase 7 | Complete |
+| TELEM-05 | Phase 7 | Complete |
+| TELEM-06 | Phase 7 | Complete |
+| TELEM-07 | Phase 7 | Complete |
 | HA-01 | Phase 8 | Pending |
 | HA-02 | Phase 8 | Pending |
 | HA-03 | Phase 8 | Pending |
