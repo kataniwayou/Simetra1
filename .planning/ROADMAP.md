@@ -85,11 +85,11 @@ Plans:
   3. Source=Module data flows to both Branch A (metrics) and Branch B (State Vector); Source=Configuration data flows to Branch A only
   4. State Vector stores last-known domain object with timestamp and correlationId per device/definition, in-memory only, no persistence
   5. A failure in metric creation does not block State Vector update, and vice versa -- branches are independent
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: IMetricFactory and metric creation (Branch A)
-- [ ] 04-02: State Vector service and source-based routing (Branch B)
+- [ ] 04-01-PLAN.md -- IMetricFactory and MetricFactory (Branch A) + IStateVectorService, StateVectorEntry, and StateVectorService (Branch B)
+- [ ] 04-02-PLAN.md -- ProcessingCoordinator with source-based routing and branch isolation + DI registration
 
 ### Phase 5: Plugin System + Simetra Module
 **Goal**: The IDeviceModule plugin system enables adding new device types without modifying existing code, proven by the Simetra virtual device module that defines a heartbeat trap flowing through the full extraction and processing pipeline
