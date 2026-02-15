@@ -9,14 +9,14 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 
 ### Pipeline
 
-- [ ] **PIPE-01**: Single SNMP listener (SharpSnmpLib) receives v2c traps on configurable UDP port
-- [ ] **PIPE-02**: Device filter identifies source device by IP from registered device list
-- [ ] **PIPE-03**: Trap filter keeps only OIDs defined in the device's trap definitions, rejects unmatched
-- [ ] **PIPE-04**: Filtered traps route into device-specific bounded Channel<T> (one channel per device module)
-- [ ] **PIPE-05**: Channels use BoundedChannelFullMode.DropOldest with itemDropped callback logging at Debug level
-- [ ] **PIPE-06**: Poll responses bypass Layer 2 and channels, going directly to Layer 3 extractor
-- [ ] **PIPE-07**: Composable middleware chain for cross-cutting concerns (correlationId propagation, structured logging, error handling)
-- [ ] **PIPE-08**: Traps attach correlationId on arrival at listener before forwarding to Layer 2
+- [x] **PIPE-01**: Single SNMP listener (SharpSnmpLib) receives v2c traps on configurable UDP port
+- [x] **PIPE-02**: Device filter identifies source device by IP from registered device list
+- [x] **PIPE-03**: Trap filter keeps only OIDs defined in the device's trap definitions, rejects unmatched
+- [x] **PIPE-04**: Filtered traps route into device-specific bounded Channel<T> (one channel per device module)
+- [x] **PIPE-05**: Channels use BoundedChannelFullMode.DropOldest with itemDropped callback logging at Debug level
+- [x] **PIPE-06**: Poll responses bypass Layer 2 and channels, going directly to Layer 3 extractor
+- [x] **PIPE-07**: Composable middleware chain for cross-cutting concerns (correlationId propagation, structured logging, error handling)
+- [x] **PIPE-08**: Traps attach correlationId on arrival at listener before forwarding to Layer 2
 
 ### Extraction
 
@@ -203,14 +203,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | EXTR-07 | Phase 2 | Complete |
 | EXTR-08 | Phase 2 | Complete |
 | EXTR-09 | Phase 2 | Complete |
-| PIPE-01 | Phase 3 | Pending |
-| PIPE-02 | Phase 3 | Pending |
-| PIPE-03 | Phase 3 | Pending |
-| PIPE-04 | Phase 3 | Pending |
-| PIPE-05 | Phase 3 | Pending |
-| PIPE-06 | Phase 3 | Pending |
-| PIPE-07 | Phase 3 | Pending |
-| PIPE-08 | Phase 3 | Pending |
+| PIPE-01 | Phase 3 | Complete |
+| PIPE-02 | Phase 3 | Complete |
+| PIPE-03 | Phase 3 | Complete |
+| PIPE-04 | Phase 3 | Complete |
+| PIPE-05 | Phase 3 | Complete |
+| PIPE-06 | Phase 3 | Complete |
+| PIPE-07 | Phase 3 | Complete |
+| PIPE-08 | Phase 3 | Complete |
 | PROC-01 | Phase 4 | Pending |
 | PROC-02 | Phase 4 | Pending |
 | PROC-03 | Phase 4 | Pending |

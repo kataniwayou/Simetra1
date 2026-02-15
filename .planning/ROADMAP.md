@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Project Foundation + Configuration** - .NET 9 scaffolding, DI wiring, options classes, appsettings.json binding
 - [x] **Phase 2: Domain Models + Extraction Engine** - PollDefinitionDto, Role-based OID system, generic extractor, SNMP type handling
-- [ ] **Phase 3: SNMP Listener + Device Routing** - UDP trap listener, device filter, trap filter, channels, middleware chain
+- [x] **Phase 3: SNMP Listener + Device Routing** - UDP trap listener, device filter, trap filter, channels, middleware chain
 - [ ] **Phase 4: Processing Pipeline** - Metric creation, IMetricFactory, State Vector, source-based routing
 - [ ] **Phase 5: Plugin System + Simetra Module** - IDeviceModule interface, device registry, SimetraModule with heartbeat definition
 - [ ] **Phase 6: Scheduling System** - Quartz scheduler, poll jobs, heartbeat job, correlation job, liveness vector
@@ -68,12 +68,12 @@ Plans:
   3. Accepted traps route into the correct device-specific bounded Channel with DropOldest behavior, and dropped items trigger an itemDropped callback logged at Debug level
   4. Poll responses bypass Layer 2 channels entirely, going directly to the Layer 3 extractor
   5. Every trap receives a correlationId attached at the listener before forwarding to Layer 2, and the composable middleware chain handles cross-cutting concerns (correlationId propagation, structured logging, error handling)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: SNMP listener service (Layer 1)
-- [ ] 03-02: Device filter, trap filter, and channel routing (Layer 2)
-- [ ] 03-03: Middleware chain for cross-cutting concerns
+- [x] 03-01-PLAN.md -- Foundational types and services (TrapEnvelope, TrapContext, DeviceRegistry, TrapFilter, DeviceChannelManager, ICorrelationService)
+- [x] 03-02-PLAN.md -- Middleware chain infrastructure and implementations (ErrorHandling, CorrelationId, Logging)
+- [x] 03-03-PLAN.md -- SnmpListenerService BackgroundService and DI wiring
 
 ### Phase 4: Processing Pipeline
 **Goal**: Extracted data flows through two processing branches -- Branch A creates OTLP-ready metrics with enforced base labels, and Branch B updates the in-memory State Vector -- with source-based routing controlling which branches activate
@@ -201,7 +201,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 |-------|----------------|--------|-----------|
 | 1. Project Foundation + Configuration | 3/3 | Complete | 2026-02-15 |
 | 2. Domain Models + Extraction Engine | 2/2 | Complete | 2026-02-15 |
-| 3. SNMP Listener + Device Routing | 0/3 | Not started | - |
+| 3. SNMP Listener + Device Routing | 3/3 | Complete | 2026-02-15 |
 | 4. Processing Pipeline | 0/2 | Not started | - |
 | 5. Plugin System + Simetra Module | 0/2 | Not started | - |
 | 6. Scheduling System | 0/3 | Not started | - |
