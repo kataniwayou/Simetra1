@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSimetraConfiguration(builder.Configuration);
 builder.Services.AddSnmpPipeline();
+builder.Services.AddProcessingPipeline();
 
 builder.Services.AddHealthChecks();
 

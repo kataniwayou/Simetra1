@@ -143,4 +143,18 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    /// <summary>
+    /// Registers all Phase 4 processing pipeline services: metric factory, state vector,
+    /// and processing coordinator. Must be called after <see cref="AddSimetraConfiguration"/>
+    /// (MetricFactory depends on <c>IOptions&lt;SiteOptions&gt;</c>).
+    /// </summary>
+    public static IServiceCollection AddProcessingPipeline(this IServiceCollection services)
+    {
+        services.AddSingleton<IMetricFactory, MetricFactory>();
+        services.AddSingleton<IStateVectorService, StateVectorService>();
+        services.AddSingleton<IProcessingCoordinator, ProcessingCoordinator>();
+
+        return services;
+    }
 }
