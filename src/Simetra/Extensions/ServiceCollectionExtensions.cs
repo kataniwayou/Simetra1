@@ -16,9 +16,33 @@ using Simetra.Jobs;
 using Simetra.Pipeline;
 using Simetra.Pipeline.Middleware;
 using Simetra.Services;
+using Simetra.Lifecycle;
 using Simetra.Telemetry;
 
 namespace Simetra.Extensions;
+
+// 11-Step Startup Sequence (LIFE-01):
+// Steps execute via IHostedService registration order and host build sequence.
+//  1. Validate configuration        -- ValidateOnStart on all Options (AddSimetraConfiguration)
+//  2. Initialize telemetry providers -- AddSimetraTelemetry (MeterProvider, TracerProvider, LoggerProvider)
+//  3. Start leader election          -- K8sLeaseElection hosted service (AddSimetraTelemetry)
+//  4. Initialize device registry     -- DeviceRegistry singleton (AddSnmpPipeline)
+//  5. Initialize device channels     -- DeviceChannelManager singleton (AddSnmpPipeline)
+//  6. Build middleware pipeline      -- TrapMiddlewareDelegate singleton (AddSnmpPipeline)
+//  7. Start SNMP listener            -- SnmpListenerService hosted service (AddSnmpPipeline)
+//  8. Merge poll definitions         -- PollDefinitionRegistry in AddScheduling
+//  9. Start Quartz scheduler         -- QuartzHostedService (AddScheduling)
+// 10. Generate first correlationId   -- Direct call after builder.Build() (Program.cs)
+// 11. Map health endpoints + run     -- MapHealthChecks + app.Run() (Program.cs)
+//
+// Shutdown Sequence (LIFE-05):
+// Reverse of startup, orchestrated by GracefulShutdownService (registered LAST, stops FIRST):
+//  1. Release lease                  -- K8sLeaseElection.StopAsync (called explicitly)
+//  2. Stop SNMP listener             -- SnmpListenerService.StopAsync (called explicitly)
+//  3. Scheduler standby              -- IScheduler.Standby() (prevents new job fires)
+//  4. Drain device channels          -- CompleteAll() + WaitForDrainAsync()
+//  5. Flush telemetry                -- MeterProvider/TracerProvider.ForceFlush (protected budget)
+// Then framework calls remaining StopAsync in reverse order (idempotent double-stops).
 
 /// <summary>
 /// Extension methods for registering Simetra configuration and pipeline services with DI.
@@ -455,7 +479,7 @@ public static class ServiceCollectionExtensions
     /// Registers the three Kubernetes health probe checks (startup, readiness, liveness)
     /// with tag-based filtering. Must be called after <see cref="AddScheduling"/> so that
     /// <see cref="IJobIntervalRegistry"/> is already registered.
-    /// DI order: Telemetry -> Configuration -> DeviceModules -> SnmpPipeline -> ProcessingPipeline -> Scheduling -> HealthChecks.
+    /// DI order: Telemetry -> Configuration -> DeviceModules -> SnmpPipeline -> ProcessingPipeline -> Scheduling -> HealthChecks -> Lifecycle.
     /// </summary>
     public static IServiceCollection AddSimetraHealthChecks(this IServiceCollection services)
     {
@@ -463,6 +487,35 @@ public static class ServiceCollectionExtensions
             .AddCheck<StartupHealthCheck>("startup", tags: new[] { "startup" })
             .AddCheck<ReadinessHealthCheck>("readiness", tags: new[] { "ready" })
             .AddCheck<LivenessHealthCheck>("liveness", tags: new[] { "live" });
+
+        return services;
+    }
+
+    /// <summary>
+    /// Registers <see cref="GracefulShutdownService"/> and configures <see cref="HostOptions.ShutdownTimeout"/>.
+    /// <para>
+    /// MUST be called LAST in DI registration order. The .NET Generic Host stops
+    /// <see cref="IHostedService"/> instances in REVERSE registration order, so the
+    /// last-registered service stops first. <see cref="GracefulShutdownService"/> is the
+    /// SINGLE orchestrator of ALL 5 LIFE-05 shutdown steps:
+    /// </para>
+    /// <list type="number">
+    /// <item><description>Release lease (K8sLeaseElection.StopAsync -- near-instant HA failover)</description></item>
+    /// <item><description>Stop SNMP listener (SnmpListenerService.StopAsync -- no new traps)</description></item>
+    /// <item><description>Scheduler standby (IScheduler.Standby -- no new job fires)</description></item>
+    /// <item><description>Drain device channels (CompleteAll + WaitForDrainAsync)</description></item>
+    /// <item><description>Flush telemetry (MeterProvider/TracerProvider.ForceFlush -- protected budget)</description></item>
+    /// </list>
+    /// <para>
+    /// DI order: Telemetry -> Configuration -> DeviceModules -> SnmpPipeline -> ProcessingPipeline -> Scheduling -> HealthChecks -> Lifecycle.
+    /// </para>
+    /// </summary>
+    public static IServiceCollection AddSimetraLifecycle(this IServiceCollection services)
+    {
+        services.Configure<HostOptions>(opts =>
+            opts.ShutdownTimeout = TimeSpan.FromSeconds(30));
+
+        services.AddHostedService<GracefulShutdownService>();
 
         return services;
     }

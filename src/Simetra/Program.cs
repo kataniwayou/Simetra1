@@ -1,12 +1,19 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Trace;
 using Simetra.Extensions;
 using Simetra.Pipeline;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// DI registration order (see 11-Step Startup Sequence in ServiceCollectionExtensions.cs):
+// 1. Telemetry (registered first = disposed last)
+// 2. Configuration (ValidateOnStart for fail-fast)
+// 3. DeviceModules (IDeviceModule singletons)
+// 4. SnmpPipeline (registry, channels, listener)
+// 5. ProcessingPipeline (metrics, state vector, coordinator)
+// 6. Scheduling (Quartz, jobs, triggers)
+// 7. HealthChecks (startup, readiness, liveness)
+// 8. Lifecycle (GracefulShutdownService -- MUST BE LAST, stops FIRST)
 builder.AddSimetraTelemetry();
 builder.Services.AddSimetraConfiguration(builder.Configuration);
 builder.Services.AddDeviceModules();
@@ -14,6 +21,7 @@ builder.Services.AddSnmpPipeline();
 builder.Services.AddProcessingPipeline();
 builder.Services.AddScheduling(builder.Configuration);
 builder.Services.AddSimetraHealthChecks();
+builder.Services.AddSimetraLifecycle();
 
 var app = builder.Build();
 
@@ -21,18 +29,8 @@ var app = builder.Build();
 var correlationService = app.Services.GetRequiredService<ICorrelationService>();
 correlationService.SetCorrelationId(Guid.NewGuid().ToString("N"));
 
-// TELEM-05: ForceFlush during shutdown prevents final metric/trace loss.
-// Fires on ApplicationStopping (before DI disposal). 5-second timeout budget per provider.
-// LoggerProvider flush is handled by the host's logging infrastructure disposal.
-app.Lifetime.ApplicationStopping.Register(() =>
-{
-    // Resolve providers via GetService (null-safe -- providers may not be registered in test scenarios)
-    var meterProvider = app.Services.GetService<MeterProvider>();
-    var tracerProvider = app.Services.GetService<TracerProvider>();
-
-    meterProvider?.ForceFlush(timeoutMilliseconds: 5000);
-    tracerProvider?.ForceFlush(timeoutMilliseconds: 5000);
-});
+// TELEM-05 + LIFE-07: Telemetry ForceFlush is handled by GracefulShutdownService
+// (time-budgeted, runs as final protected step during graceful shutdown).
 
 // Health probe endpoints with tag-filtered checks and explicit status codes.
 // Each endpoint runs only the health check(s) matching its tag.
