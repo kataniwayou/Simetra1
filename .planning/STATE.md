@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** The SNMP pipeline must reliably receive traps, poll devices, extract data, and emit telemetry to OTLP -- with automatic leader-follower failover ensuring no single point of failure.
-**Current focus:** Phase 8: High Availability
+**Current focus:** Phase 8: High Availability -- COMPLETE
 
 ## Current Position
 
-Phase: 8 of 10 (High Availability) -- In progress
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-15 -- Completed 08-01-PLAN.md (K8sLeaseElection + environment-based DI)
+Phase: 8 of 10 (High Availability) -- Phase complete
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-02-15 -- Completed 08-02-PLAN.md (role-gated OTLP exporter wiring)
 
-Progress: [██████████████████░░░░░░░░░] 18/27 (67%)
+Progress: [███████████████████░░░░░░░░] 19/27 (70%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 18
+- Total plans completed: 19
 - Average duration: 2.6 min
-- Total execution time: 0.78 hours
+- Total execution time: 0.81 hours
 
 **By Phase:**
 
@@ -34,11 +34,11 @@ Progress: [██████████████████░░░░░
 | 05-plugin-system-simetra-module | 2/2 | 3 min | 1.5 min |
 | 06-scheduling-system | 3/3 | 8 min | 2.7 min |
 | 07-telemetry-integration | 2/2 | 4 min | 2.0 min |
-| 08-high-availability | 1/2 | 3 min | 3.0 min |
+| 08-high-availability | 2/2 | 5 min | 2.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 2 min, 2 min, 2 min, 2 min, 3 min
-- Trend: stable (K8sLeaseElection with KubernetesClient LeaderElector integration)
+- Last 5 plans: 2 min, 2 min, 2 min, 3 min, 2 min
+- Trend: stable (role-gated OTLP exporter wiring completes HA phase)
 
 *Updated after each plan completion*
 
@@ -102,6 +102,10 @@ Recent decisions affecting current work:
 - [08-01]: Single-instance DI pattern for K8sLeaseElection -- concrete singleton forwarded to ILeaderElection + IHostedService via GetRequiredService
 - [08-01]: RunAndTryToHoldLeadershipForeverAsync -- pod remains candidate after leadership loss without restart
 - [08-01]: Explicit lease delete on SIGTERM via DeleteNamespacedLeaseAsync -- near-instant failover
+- [08-02]: Manual OtlpMetricExporter/OtlpTraceExporter construction -- AddOtlpExporter() prevents RoleGatedExporter wrapping
+- [08-02]: AddReader(Func<IServiceProvider, MetricReader>) factory overload for deferred ILeaderElection resolution in metrics
+- [08-02]: AddProcessor(Func<IServiceProvider, BaseProcessor<Activity>>) factory overload for deferred ILeaderElection resolution in traces
+- [08-02]: Log OTLP exporter intentionally NOT wrapped -- all pods export logs (TELEM-04, HA-03)
 
 ### Pending Todos
 
@@ -114,5 +118,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Completed 08-01-PLAN.md (K8sLeaseElection + environment-based DI)
+Stopped at: Completed 08-02-PLAN.md (role-gated OTLP exporter wiring) -- Phase 8 complete
 Resume file: None
