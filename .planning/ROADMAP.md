@@ -12,7 +12,7 @@ Simetra is built bottom-up through its four-layer SNMP pipeline, then layered wi
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Project Foundation + Configuration** - .NET 9 scaffolding, DI wiring, options classes, appsettings.json binding
+- [x] **Phase 1: Project Foundation + Configuration** - .NET 9 scaffolding, DI wiring, options classes, appsettings.json binding
 - [ ] **Phase 2: Domain Models + Extraction Engine** - PollDefinitionDto, Role-based OID system, generic extractor, SNMP type handling
 - [ ] **Phase 3: SNMP Listener + Device Routing** - UDP trap listener, device filter, trap filter, channels, middleware chain
 - [ ] **Phase 4: Processing Pipeline** - Metric creation, IMetricFactory, State Vector, source-based routing
@@ -38,9 +38,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md -- Project scaffolding, directory structure, solution setup, health endpoint skeleton
-- [ ] 01-02-PLAN.md -- Configuration options classes, validators, DI registration, Program.cs wiring
-- [ ] 01-03-PLAN.md -- Configuration validation test suite (binding, validation, edge cases)
+- [x] 01-01-PLAN.md -- Project scaffolding, directory structure, solution setup, health endpoint skeleton
+- [x] 01-02-PLAN.md -- Configuration options classes, validators, DI registration, Program.cs wiring
+- [x] 01-03-PLAN.md -- Configuration validation test suite (binding, validation, edge cases)
 
 ### Phase 2: Domain Models + Extraction Engine
 **Goal**: The generic extractor transforms raw SNMP varbinds into strongly typed domain objects using PollDefinitionDto definitions, with Role-based extraction producing metric values and labels without any per-device-type logic
@@ -199,7 +199,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Project Foundation + Configuration | 0/3 | Planning complete | - |
+| 1. Project Foundation + Configuration | 3/3 | Complete | 2026-02-15 |
 | 2. Domain Models + Extraction Engine | 0/2 | Not started | - |
 | 3. SNMP Listener + Device Routing | 0/3 | Not started | - |
 | 4. Processing Pipeline | 0/2 | Not started | - |

@@ -88,18 +88,18 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 
 ### Configuration
 
-- [ ] **CONF-01**: Static appsettings.json with restart required for changes
-- [ ] **CONF-02**: Site config: Name, PodIdentity (defaults to HOSTNAME env var)
-- [ ] **CONF-03**: Lease config: Name, Namespace, RenewIntervalSeconds, DurationSeconds
-- [ ] **CONF-04**: SnmpListener config: BindAddress, Port, CommunityString, Version (v2c only)
-- [ ] **CONF-05**: HeartbeatJob config: IntervalSeconds
-- [ ] **CONF-06**: CorrelationJob config: IntervalSeconds
-- [ ] **CONF-07**: Liveness config: GraceMultiplier
-- [ ] **CONF-08**: Channels config: BoundedCapacity
-- [ ] **CONF-09**: Devices[] array: Name, IpAddress, DeviceType, optional MetricPolls[]
-- [ ] **CONF-10**: MetricPolls[] per device: MetricName, MetricType, Oids[], IntervalSeconds (Source set by system)
-- [ ] **CONF-11**: OTLP config: Endpoint, ServiceName
-- [ ] **CONF-12**: Logging config: LogLevel:Default, EnableConsole
+- [x] **CONF-01**: Static appsettings.json with restart required for changes
+- [x] **CONF-02**: Site config: Name, PodIdentity (defaults to HOSTNAME env var)
+- [x] **CONF-03**: Lease config: Name, Namespace, RenewIntervalSeconds, DurationSeconds
+- [x] **CONF-04**: SnmpListener config: BindAddress, Port, CommunityString, Version (v2c only)
+- [x] **CONF-05**: HeartbeatJob config: IntervalSeconds
+- [x] **CONF-06**: CorrelationJob config: IntervalSeconds
+- [x] **CONF-07**: Liveness config: GraceMultiplier
+- [x] **CONF-08**: Channels config: BoundedCapacity
+- [x] **CONF-09**: Devices[] array: Name, IpAddress, DeviceType, optional MetricPolls[]
+- [x] **CONF-10**: MetricPolls[] per device: MetricName, MetricType, Oids[], IntervalSeconds (Source set by system)
+- [x] **CONF-11**: OTLP config: Endpoint, ServiceName
+- [x] **CONF-12**: Logging config: LogLevel:Default, EnableConsole
 
 ### Plugin System
 
@@ -182,18 +182,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CONF-01 | Phase 1 | Pending |
-| CONF-02 | Phase 1 | Pending |
-| CONF-03 | Phase 1 | Pending |
-| CONF-04 | Phase 1 | Pending |
-| CONF-05 | Phase 1 | Pending |
-| CONF-06 | Phase 1 | Pending |
-| CONF-07 | Phase 1 | Pending |
-| CONF-08 | Phase 1 | Pending |
-| CONF-09 | Phase 1 | Pending |
-| CONF-10 | Phase 1 | Pending |
-| CONF-11 | Phase 1 | Pending |
-| CONF-12 | Phase 1 | Pending |
+| CONF-01 | Phase 1 | Complete |
+| CONF-02 | Phase 1 | Complete |
+| CONF-03 | Phase 1 | Complete |
+| CONF-04 | Phase 1 | Complete |
+| CONF-05 | Phase 1 | Complete |
+| CONF-06 | Phase 1 | Complete |
+| CONF-07 | Phase 1 | Complete |
+| CONF-08 | Phase 1 | Complete |
+| CONF-09 | Phase 1 | Complete |
+| CONF-10 | Phase 1 | Complete |
+| CONF-11 | Phase 1 | Complete |
+| CONF-12 | Phase 1 | Complete |
 | EXTR-01 | Phase 2 | Pending |
 | EXTR-02 | Phase 2 | Pending |
 | EXTR-03 | Phase 2 | Pending |
