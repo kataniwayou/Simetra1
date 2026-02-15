@@ -133,12 +133,11 @@ Plans:
   3. Structured logs include site name, role (leader/follower), and correlationId on every log entry; console logging is toggleable via EnableConsole config
   4. EnumMap values are never reported as metric values to OTLP -- raw SNMP integers are always the metric values
   5. Telemetry providers are registered first in DI (disposed last) with ForceFlush called during shutdown to prevent final metric loss
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 07-01: OpenTelemetry provider setup and OTLP exporters
-- [ ] 07-02: Role-gated exporter pattern
-- [ ] 07-03: Structured logging and console configuration
+- [ ] 07-01-PLAN.md -- OpenTelemetry packages, ILeaderElection + AlwaysLeaderElection, RoleGatedExporter, MeterProvider + TracerProvider with OTLP exporters, DI order update
+- [ ] 07-02-PLAN.md -- SimetraLogEnrichmentProcessor, OTLP log exporter, ClearProviders + conditional AddConsole, ForceFlush on ApplicationStopping
 
 ### Phase 8: High Availability
 **Goal**: Leader-follower HA ensures exactly one instance exports metrics and traces at any time, with automatic failover via Kubernetes Lease API and near-instant handoff on graceful shutdown
@@ -205,7 +204,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 4. Processing Pipeline | 2/2 | Complete | 2026-02-15 |
 | 5. Plugin System + Simetra Module | 2/2 | Complete | 2026-02-15 |
 | 6. Scheduling System | 3/3 | Complete | 2026-02-15 |
-| 7. Telemetry Integration | 0/3 | Not started | - |
+| 7. Telemetry Integration | 0/2 | Not started | - |
 | 8. High Availability | 0/3 | Not started | - |
 | 9. Health Probes + Lifecycle | 0/3 | Not started | - |
 | 10. End-to-End Integration + Testing | 0/4 | Not started | - |
