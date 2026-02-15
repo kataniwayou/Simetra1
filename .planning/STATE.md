@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** The SNMP pipeline must reliably receive traps, poll devices, extract data, and emit telemetry to OTLP -- with automatic leader-follower failover ensuring no single point of failure.
-**Current focus:** Phase 8: High Availability -- COMPLETE
+**Current focus:** Phase 9: Health Probes + Lifecycle
 
 ## Current Position
 
-Phase: 8 of 10 (High Availability) -- Phase complete
-Plan: 2 of 2 in current phase
-Status: Phase complete
-Last activity: 2026-02-15 -- Completed 08-02-PLAN.md (role-gated OTLP exporter wiring)
+Phase: 9 of 10 (Health Probes + Lifecycle) -- NOT STARTED
+Plan: 0 of 3 in current phase
+Status: Ready for planning
+Last activity: 2026-02-15 -- Completed Phase 8: High Availability (verified 13/13 must-haves)
 
 Progress: [███████████████████░░░░░░░░] 19/27 (70%)
 
@@ -118,5 +118,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Completed 08-02-PLAN.md (role-gated OTLP exporter wiring) -- Phase 8 complete
+Stopped at: Completed Phase 8: High Availability (all 2 plans verified, 13/13 must-haves passed)
 Resume file: None

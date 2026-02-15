@@ -56,13 +56,13 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 
 ### High Availability
 
-- [ ] **HA-01**: ILeaderElection abstraction with AlwaysLeaderElection (local dev) and K8sLeaseElection (production)
-- [ ] **HA-02**: K8s Lease election uses coordination.k8s.io/v1 with configurable renew interval (~10s) and TTL (~15s)
-- [ ] **HA-03**: Leader activates metric + trace OTLP exporters; followers keep only log exporter active
-- [ ] **HA-04**: Role-gated exporter pattern (decorator wrapping BaseExporter, checking IsLeader on each Export call)
-- [ ] **HA-05**: On SIGTERM, leader explicitly releases lease for near-instant failover
-- [ ] **HA-06**: All pods execute same business logic and maintain identical internal state
-- [ ] **HA-07**: Role can change at runtime (follower -> leader on failover) -- exporter gating is dynamic
+- [x] **HA-01**: ILeaderElection abstraction with AlwaysLeaderElection (local dev) and K8sLeaseElection (production)
+- [x] **HA-02**: K8s Lease election uses coordination.k8s.io/v1 with configurable renew interval (~10s) and TTL (~15s)
+- [x] **HA-03**: Leader activates metric + trace OTLP exporters; followers keep only log exporter active
+- [x] **HA-04**: Role-gated exporter pattern (decorator wrapping BaseExporter, checking IsLeader on each Export call)
+- [x] **HA-05**: On SIGTERM, leader explicitly releases lease for near-instant failover
+- [x] **HA-06**: All pods execute same business logic and maintain identical internal state
+- [x] **HA-07**: Role can change at runtime (follower -> leader on failover) -- exporter gating is dynamic
 
 ### Health Monitoring
 
@@ -243,13 +243,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TELEM-05 | Phase 7 | Complete |
 | TELEM-06 | Phase 7 | Complete |
 | TELEM-07 | Phase 7 | Complete |
-| HA-01 | Phase 8 | Pending |
-| HA-02 | Phase 8 | Pending |
-| HA-03 | Phase 8 | Pending |
-| HA-04 | Phase 8 | Pending |
-| HA-05 | Phase 8 | Pending |
-| HA-06 | Phase 8 | Pending |
-| HA-07 | Phase 8 | Pending |
+| HA-01 | Phase 8 | Complete |
+| HA-02 | Phase 8 | Complete |
+| HA-03 | Phase 8 | Complete |
+| HA-04 | Phase 8 | Complete |
+| HA-05 | Phase 8 | Complete |
+| HA-06 | Phase 8 | Complete |
+| HA-07 | Phase 8 | Complete |
 | HLTH-01 | Phase 9 | Pending |
 | HLTH-02 | Phase 9 | Pending |
 | HLTH-03 | Phase 9 | Pending |
