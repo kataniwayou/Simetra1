@@ -28,4 +28,17 @@ public interface IDeviceChannelManager
     /// Gets all registered device names that have channels.
     /// </summary>
     IReadOnlyCollection<string> DeviceNames { get; }
+
+    /// <summary>
+    /// Signals all channel writers as complete (no more writes accepted).
+    /// Used during graceful shutdown to initiate channel draining.
+    /// </summary>
+    void CompleteAll();
+
+    /// <summary>
+    /// Awaits <see cref="System.Threading.Channels.ChannelReader{T}.Completion"/> on all
+    /// channels. Returns when all channels have been fully drained by their consumers.
+    /// </summary>
+    /// <param name="cancellationToken">Token to cancel the wait.</param>
+    Task WaitForDrainAsync(CancellationToken cancellationToken);
 }

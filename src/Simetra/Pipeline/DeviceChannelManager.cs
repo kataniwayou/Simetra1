@@ -15,6 +15,7 @@ namespace Simetra.Pipeline;
 public sealed class DeviceChannelManager : IDeviceChannelManager
 {
     private readonly Dictionary<string, Channel<TrapEnvelope>> _channels;
+    private readonly ILogger<DeviceChannelManager> _logger;
 
     /// <summary>
     /// Initializes a new instance, creating one bounded channel per device from
@@ -23,13 +24,14 @@ public sealed class DeviceChannelManager : IDeviceChannelManager
     /// <param name="devicesOptions">Device configurations defining which channels to create.</param>
     /// <param name="channelsOptions">Channel capacity configuration.</param>
     /// <param name="modules">Code-defined device modules discovered via DI.</param>
-    /// <param name="logger">Logger for item-dropped callbacks.</param>
+    /// <param name="logger">Logger for item-dropped callbacks and lifecycle operations.</param>
     public DeviceChannelManager(
         IOptions<DevicesOptions> devicesOptions,
         IOptions<ChannelsOptions> channelsOptions,
         IEnumerable<IDeviceModule> modules,
         ILogger<DeviceChannelManager> logger)
     {
+        _logger = logger;
         var capacity = channelsOptions.Value.BoundedCapacity;
         var configDeviceNames = devicesOptions.Value.Devices.Select(d => d.Name);
         var moduleDeviceNames = modules.Select(m => m.DeviceName);
@@ -74,4 +76,37 @@ public sealed class DeviceChannelManager : IDeviceChannelManager
 
     /// <inheritdoc />
     public IReadOnlyCollection<string> DeviceNames => _channels.Keys;
+
+    /// <inheritdoc />
+    public void CompleteAll()
+    {
+        foreach (var (deviceName, channel) in _channels)
+        {
+            try
+            {
+                channel.Writer.Complete();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(
+                    ex,
+                    "Failed to complete channel writer for device {DeviceName}",
+                    deviceName);
+            }
+        }
+
+        _logger.LogInformation("Completed all {Count} device channel writers", _channels.Count);
+    }
+
+    /// <inheritdoc />
+    public async Task WaitForDrainAsync(CancellationToken cancellationToken)
+    {
+        var completionTasks = _channels.Values
+            .Select(channel => channel.Reader.Completion)
+            .ToList();
+
+        await Task.WhenAll(completionTasks).WaitAsync(cancellationToken);
+
+        _logger.LogInformation("All device channels drained");
+    }
 }
