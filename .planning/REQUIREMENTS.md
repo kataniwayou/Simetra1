@@ -66,15 +66,15 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 
 ### Health Monitoring
 
-- [ ] **HLTH-01**: Liveness vector with one entry per scheduled job, stamped at end of every job completion
-- [ ] **HLTH-02**: Liveness vector NOT stamped by incoming traps (only scheduled jobs)
-- [ ] **HLTH-03**: K8s startup probe returns healthy once pipeline is wired and first correlationId exists
-- [ ] **HLTH-04**: K8s readiness probe checks all device channels open + Quartz scheduler running
-- [ ] **HLTH-05**: K8s liveness probe HTTP handler checks liveness vector -- stale stamps -> 503 with diagnostic log
-- [ ] **HLTH-06**: Staleness threshold: tenant stamp age < (tenant's interval x GraceMultiplier)
-- [ ] **HLTH-07**: Healthy liveness check returns 200 silently (no log)
-- [ ] **HLTH-08**: Heartbeat send job stamps liveness vector (proves scheduler alive)
-- [ ] **HLTH-09**: Heartbeat arrival updates Simetra tenant in State Vector (informational in this milestone)
+- [x] **HLTH-01**: Liveness vector with one entry per scheduled job, stamped at end of every job completion
+- [x] **HLTH-02**: Liveness vector NOT stamped by incoming traps (only scheduled jobs)
+- [x] **HLTH-03**: K8s startup probe returns healthy once pipeline is wired and first correlationId exists
+- [x] **HLTH-04**: K8s readiness probe checks all device channels open + Quartz scheduler running
+- [x] **HLTH-05**: K8s liveness probe HTTP handler checks liveness vector -- stale stamps -> 503 with diagnostic log
+- [x] **HLTH-06**: Staleness threshold: tenant stamp age < (tenant's interval x GraceMultiplier)
+- [x] **HLTH-07**: Healthy liveness check returns 200 silently (no log)
+- [x] **HLTH-08**: Heartbeat send job stamps liveness vector (proves scheduler alive)
+- [x] **HLTH-09**: Heartbeat arrival updates Simetra tenant in State Vector (informational in this milestone)
 
 ### Telemetry
 
@@ -112,13 +112,13 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 
 ### Lifecycle
 
-- [ ] **LIFE-01**: 11-step startup sequence executed in order via IHostedService registration
+- [x] **LIFE-01**: 11-step startup sequence executed in order via IHostedService registration
 - [x] **LIFE-02**: First correlationId generated directly on startup before any job fires (not via scheduler)
-- [ ] **LIFE-03**: Startup merges hardcoded (Source=Module) + configurable (Source=Configuration) poll definitions per device
-- [ ] **LIFE-04**: Graceful shutdown with CancellationToken and time-budgeted steps totaling ~30s
-- [ ] **LIFE-05**: Shutdown order: release lease -> stop listener -> stop scheduler -> drain channels -> flush telemetry
-- [ ] **LIFE-06**: Each shutdown step has bounded time budget; if exceeded, abandon and move to next step
-- [ ] **LIFE-07**: Telemetry flush is protected -- gets its own budget regardless of prior step outcomes
+- [x] **LIFE-03**: Startup merges hardcoded (Source=Module) + configurable (Source=Configuration) poll definitions per device
+- [x] **LIFE-04**: Graceful shutdown with CancellationToken and time-budgeted steps totaling ~30s
+- [x] **LIFE-05**: Shutdown order: release lease -> stop listener -> stop scheduler -> drain channels -> flush telemetry
+- [x] **LIFE-06**: Each shutdown step has bounded time budget; if exceeded, abandon and move to next step
+- [x] **LIFE-07**: Telemetry flush is protected -- gets its own budget regardless of prior step outcomes
 
 ### Testing
 
@@ -250,21 +250,21 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HA-05 | Phase 8 | Complete |
 | HA-06 | Phase 8 | Complete |
 | HA-07 | Phase 8 | Complete |
-| HLTH-01 | Phase 9 | Pending |
-| HLTH-02 | Phase 9 | Pending |
-| HLTH-03 | Phase 9 | Pending |
-| HLTH-04 | Phase 9 | Pending |
-| HLTH-05 | Phase 9 | Pending |
-| HLTH-06 | Phase 9 | Pending |
-| HLTH-07 | Phase 9 | Pending |
-| HLTH-08 | Phase 9 | Pending |
-| HLTH-09 | Phase 9 | Pending |
-| LIFE-01 | Phase 9 | Pending |
-| LIFE-03 | Phase 9 | Pending |
-| LIFE-04 | Phase 9 | Pending |
-| LIFE-05 | Phase 9 | Pending |
-| LIFE-06 | Phase 9 | Pending |
-| LIFE-07 | Phase 9 | Pending |
+| HLTH-01 | Phase 9 | Complete |
+| HLTH-02 | Phase 9 | Complete |
+| HLTH-03 | Phase 9 | Complete |
+| HLTH-04 | Phase 9 | Complete |
+| HLTH-05 | Phase 9 | Complete |
+| HLTH-06 | Phase 9 | Complete |
+| HLTH-07 | Phase 9 | Complete |
+| HLTH-08 | Phase 9 | Complete |
+| HLTH-09 | Phase 9 | Complete |
+| LIFE-01 | Phase 9 | Complete |
+| LIFE-03 | Phase 9 | Complete |
+| LIFE-04 | Phase 9 | Complete |
+| LIFE-05 | Phase 9 | Complete |
+| LIFE-06 | Phase 9 | Complete |
+| LIFE-07 | Phase 9 | Complete |
 | TEST-01 | Phase 10 | Pending |
 | TEST-02 | Phase 10 | Pending |
 | TEST-03 | Phase 10 | Pending |

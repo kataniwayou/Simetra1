@@ -20,7 +20,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Scheduling System** - Quartz scheduler, poll jobs, heartbeat job, correlation job, liveness vector
 - [x] **Phase 7: Telemetry Integration** - OpenTelemetry setup, OTLP exporters, role-gated exporter pattern, structured logging
 - [x] **Phase 8: High Availability** - ILeaderElection abstraction, AlwaysLeaderElection, K8sLeaseElection, dynamic role gating
-- [ ] **Phase 9: Health Probes + Lifecycle** - K8s startup/readiness/liveness probes, 11-step startup sequence, graceful shutdown
+- [x] **Phase 9: Health Probes + Lifecycle** - K8s startup/readiness/liveness probes, 11-step startup sequence, graceful shutdown
 - [ ] **Phase 10: End-to-End Integration + Testing** - Heartbeat loopback validation, full unit test suite, pipeline verification
 
 ## Phase Details
@@ -168,8 +168,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 09-01-PLAN.md -- Health probe IHealthCheck implementations (startup, readiness, liveness), IJobIntervalRegistry, DI registration, tag-filtered endpoint mapping
-- [ ] 09-02-PLAN.md -- Graceful shutdown with time-budgeted steps, channel drain API, 11-step startup documentation
+- [x] 09-01-PLAN.md -- Health probe IHealthCheck implementations (startup, readiness, liveness), IJobIntervalRegistry, DI registration, tag-filtered endpoint mapping
+- [x] 09-02-PLAN.md -- Graceful shutdown with time-budgeted steps, channel drain API, 11-step startup documentation
 
 ### Phase 10: End-to-End Integration + Testing
 **Goal**: The complete pipeline is proven working via heartbeat loopback (trap flows through all four layers and produces metrics + State Vector update), and comprehensive unit tests cover all core logic
@@ -204,7 +204,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 6. Scheduling System | 3/3 | Complete | 2026-02-15 |
 | 7. Telemetry Integration | 2/2 | Complete | 2026-02-15 |
 | 8. High Availability | 2/2 | Complete | 2026-02-15 |
-| 9. Health Probes + Lifecycle | 0/2 | Not started | - |
+| 9. Health Probes + Lifecycle | 2/2 | Complete | 2026-02-15 |
 | 10. End-to-End Integration + Testing | 0/4 | Not started | - |
 
 ---
