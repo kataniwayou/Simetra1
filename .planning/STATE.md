@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-15)
 
 ## Current Position
 
-Phase: 5 of 10 (Plugin System + Simetra Module) -- COMPLETE
-Plan: 2 of 2 in current phase
-Status: Phase complete
-Last activity: 2026-02-15 -- Completed 05-02-PLAN.md (SimetraModule implementation + DI wiring)
+Phase: 6 of 10 (Scheduling System) -- IN PROGRESS
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-02-15 -- Completed 06-01-PLAN.md (Quartz scheduling infrastructure + stub jobs)
 
-Progress: [████████████░░░░░░░░░░░░░░░] 12/27 (44%)
+Progress: [█████████████░░░░░░░░░░░░░░] 13/27 (48%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12
-- Average duration: 2.8 min
-- Total execution time: 0.55 hours
+- Total plans completed: 13
+- Average duration: 2.9 min
+- Total execution time: 0.62 hours
 
 **By Phase:**
 
@@ -32,10 +32,11 @@ Progress: [████████████░░░░░░░░░░░
 | 03-snmp-listener-device-routing | 3/3 | 8 min | 2.7 min |
 | 04-processing-pipeline | 2/2 | 4 min | 2.2 min |
 | 05-plugin-system-simetra-module | 2/2 | 3 min | 1.5 min |
+| 06-scheduling-system | 1/3 | 5 min | 5.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 4 min, 3 min, 1 min, 2 min, 1 min
-- Trend: stable at ~2.2 min
+- Last 5 plans: 1 min, 2 min, 1 min, 5 min
+- Trend: slight increase (Quartz registration is heavier)
 
 *Updated after each plan completion*
 
@@ -79,6 +80,12 @@ Recent decisions affecting current work:
 - [05-02]: HeartbeatOid as public const on SimetraModule -- single source of truth for Phase 6 HeartbeatJob
 - [05-02]: SimetraModule uses 127.0.0.1 loopback for self-directed heartbeat traps
 - [05-02]: DI registration order: Configuration -> DeviceModules -> SnmpPipeline -> ProcessingPipeline
+- [06-01]: RotatingCorrelationService uses volatile string -- single writer (startup then CorrelationJob), multiple readers, no locks
+- [06-01]: PollDefinitionRegistry uses composite string key "deviceName::metricName" with OrdinalIgnoreCase
+- [06-01]: DeviceRegistry adds OrdinalIgnoreCase name dictionary for TryGetDeviceByName
+- [06-01]: SimetraModule instantiated directly in AddScheduling for compile-time module enumeration
+- [06-01]: All SimpleTriggers use WithMisfireHandlingInstructionNextWithRemainingCount (DoNothing is CronTrigger-only)
+- [06-01]: DI registration order extended: Configuration -> DeviceModules -> SnmpPipeline -> ProcessingPipeline -> Scheduling -> HealthChecks
 
 ### Pending Todos
 
@@ -91,5 +98,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Completed 05-02-PLAN.md (SimetraModule implementation + DI wiring) -- Phase 5 complete
+Stopped at: Completed 06-01-PLAN.md (Quartz scheduling infrastructure + stub jobs)
 Resume file: None
