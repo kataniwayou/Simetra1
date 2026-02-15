@@ -100,11 +100,11 @@ Plans:
   2. SimetraModule is hardcoded in code (not in appsettings.json Devices[] array) and defines a heartbeat trap definition with Source=Module
   3. Simetra heartbeat data flows through the pipeline uniformly -- no special-case branches anywhere in listener, routing, extraction, or processing
   4. Adding a new device type requires only: a new module class, a config entry, and registration -- zero changes to existing framework code
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: IDeviceModule interface and device registry
-- [ ] 05-02: SimetraModule implementation and registration
+- [ ] 05-01-PLAN.md -- IDeviceModule interface + DeviceRegistry/DeviceChannelManager refactoring to accept modules
+- [ ] 05-02-PLAN.md -- SimetraModule implementation, AddDeviceModules extension, Program.cs wiring
 
 ### Phase 6: Scheduling System
 **Goal**: Quartz scheduler executes poll jobs, heartbeat jobs, and correlation jobs on configurable intervals, with each job stamping the liveness vector on completion and reading the current correlationId before execution
