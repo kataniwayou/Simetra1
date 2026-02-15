@@ -1,3 +1,4 @@
+using k8s;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
@@ -26,6 +27,12 @@ public static class ServiceCollectionExtensions
     /// Must be called FIRST in DI registration (registered first = disposed last,
     /// ensuring ForceFlush during shutdown).
     /// <para>
+    /// Leader election: auto-detects Kubernetes in-cluster environment via
+    /// <see cref="KubernetesClientConfiguration.IsInCluster"/>. In-cluster uses
+    /// <see cref="K8sLeaseElection"/> with coordination.k8s.io/v1 Lease API;
+    /// local dev uses <see cref="AlwaysLeaderElection"/> (always reports leader).
+    /// </para>
+    /// <para>
     /// Logging configuration: default providers (Console, Debug, EventSource) are cleared.
     /// Console is re-added only when <see cref="LoggingOptions.EnableConsole"/> is true.
     /// OTLP log exporter is always active (not role-gated -- all pods export logs).
@@ -40,7 +47,31 @@ public static class ServiceCollectionExtensions
         var loggingOptions = new LoggingOptions();
         builder.Configuration.GetSection(LoggingOptions.SectionName).Bind(loggingOptions);
 
-        builder.Services.AddSingleton<ILeaderElection, AlwaysLeaderElection>();
+        // --- Leader Election ---
+        // Auto-detect Kubernetes in-cluster vs local dev environment.
+        // In-cluster: K8sLeaseElection (coordination.k8s.io/v1 Lease API)
+        // Local dev: AlwaysLeaderElection (always reports leader)
+        if (KubernetesClientConfiguration.IsInCluster())
+        {
+            // Production: Kubernetes Lease-based leader election
+            var kubeConfig = KubernetesClientConfiguration.InClusterConfig();
+            builder.Services.AddSingleton<IKubernetes>(new Kubernetes(kubeConfig));
+
+            // Register concrete singleton FIRST, then resolve for both interfaces.
+            // This ensures a SINGLE instance serves ILeaderElection and IHostedService
+            // (avoids two-instance pitfall where hosted service updates one instance
+            // but consumers read from a different one).
+            builder.Services.AddSingleton<K8sLeaseElection>();
+            builder.Services.AddSingleton<ILeaderElection>(sp =>
+                sp.GetRequiredService<K8sLeaseElection>());
+            builder.Services.AddHostedService(sp =>
+                sp.GetRequiredService<K8sLeaseElection>());
+        }
+        else
+        {
+            // Local dev: always leader (single instance, no Kubernetes dependency)
+            builder.Services.AddSingleton<ILeaderElection, AlwaysLeaderElection>();
+        }
 
         // --- Metrics + Tracing ---
         builder.Services.AddOpenTelemetry()
