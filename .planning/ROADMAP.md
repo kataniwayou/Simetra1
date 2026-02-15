@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: SNMP Listener + Device Routing** - UDP trap listener, device filter, trap filter, channels, middleware chain
 - [x] **Phase 4: Processing Pipeline** - Metric creation, IMetricFactory, State Vector, source-based routing
 - [x] **Phase 5: Plugin System + Simetra Module** - IDeviceModule interface, device registry, SimetraModule with heartbeat definition
-- [ ] **Phase 6: Scheduling System** - Quartz scheduler, poll jobs, heartbeat job, correlation job, liveness vector
+- [x] **Phase 6: Scheduling System** - Quartz scheduler, poll jobs, heartbeat job, correlation job, liveness vector
 - [ ] **Phase 7: Telemetry Integration** - OpenTelemetry setup, OTLP exporters, role-gated exporter pattern, structured logging
 - [ ] **Phase 8: High Availability** - ILeaderElection abstraction, AlwaysLeaderElection, K8sLeaseElection, dynamic role gating
 - [ ] **Phase 9: Health Probes + Lifecycle** - K8s startup/readiness/liveness probes, 11-step startup sequence, graceful shutdown
@@ -119,9 +119,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 06-01-PLAN.md -- Quartz.AspNetCore install, RotatingCorrelationService, LivenessVectorService, PollDefinitionRegistry, DeviceRegistry extension, AddScheduling + Program.cs wiring with stub jobs
-- [ ] 06-02-PLAN.md -- StatePollJob and MetricPollJob full implementations (SNMP GET + extract + process)
-- [ ] 06-03-PLAN.md -- HeartbeatJob (loopback trap) and CorrelationJob (correlationId rotation) full implementations
+- [x] 06-01-PLAN.md -- Quartz.AspNetCore install, RotatingCorrelationService, LivenessVectorService, PollDefinitionRegistry, DeviceRegistry extension, AddScheduling + Program.cs wiring with stub jobs
+- [x] 06-02-PLAN.md -- StatePollJob and MetricPollJob full implementations (SNMP GET + extract + process)
+- [x] 06-03-PLAN.md -- HeartbeatJob (loopback trap) and CorrelationJob (correlationId rotation) full implementations
 
 ### Phase 7: Telemetry Integration
 **Goal**: OpenTelemetry emits .NET runtime metrics, SNMP-derived metrics, structured logs, and distributed traces to the OTLP collector, with metric and trace exporters gated by leader role while log exporters run on all pods
@@ -204,7 +204,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 3. SNMP Listener + Device Routing | 3/3 | Complete | 2026-02-15 |
 | 4. Processing Pipeline | 2/2 | Complete | 2026-02-15 |
 | 5. Plugin System + Simetra Module | 2/2 | Complete | 2026-02-15 |
-| 6. Scheduling System | 0/3 | Not started | - |
+| 6. Scheduling System | 3/3 | Complete | 2026-02-15 |
 | 7. Telemetry Integration | 0/3 | Not started | - |
 | 8. High Availability | 0/3 | Not started | - |
 | 9. Health Probes + Lifecycle | 0/3 | Not started | - |

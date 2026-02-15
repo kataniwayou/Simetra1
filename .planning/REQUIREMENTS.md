@@ -43,16 +43,16 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 
 ### Scheduling
 
-- [ ] **SCHED-01**: Quartz scheduler with DisallowConcurrentExecution per job key
-- [ ] **SCHED-02**: SNMP state poll jobs (per device, Source=Module) poll device and feed response to Layer 3
-- [ ] **SCHED-03**: SNMP metric poll jobs (per device, Source=Configuration) poll device and feed response to Layer 3
-- [ ] **SCHED-04**: All poll jobs use same PollDefinitionDto and same generic extractor
-- [ ] **SCHED-05**: Heartbeat job sends loopback trap to SNMP listener at configurable interval
-- [ ] **SCHED-06**: Heartbeat OID is read from Simetra module's trap definition (single source of truth)
-- [ ] **SCHED-07**: Correlation job generates new correlationId + stamps liveness vector at configurable interval
-- [ ] **SCHED-08**: All jobs read correlationId before execution and stamp liveness vector on completion
-- [ ] **SCHED-09**: Skipped job (due to DisallowConcurrentExecution) produces no new stamp -> detected by liveness probe
-- [ ] **SCHED-10**: Quartz misfire handling uses DoNothing (skip stale, wait for next trigger)
+- [x] **SCHED-01**: Quartz scheduler with DisallowConcurrentExecution per job key
+- [x] **SCHED-02**: SNMP state poll jobs (per device, Source=Module) poll device and feed response to Layer 3
+- [x] **SCHED-03**: SNMP metric poll jobs (per device, Source=Configuration) poll device and feed response to Layer 3
+- [x] **SCHED-04**: All poll jobs use same PollDefinitionDto and same generic extractor
+- [x] **SCHED-05**: Heartbeat job sends loopback trap to SNMP listener at configurable interval
+- [x] **SCHED-06**: Heartbeat OID is read from Simetra module's trap definition (single source of truth)
+- [x] **SCHED-07**: Correlation job generates new correlationId + stamps liveness vector at configurable interval
+- [x] **SCHED-08**: All jobs read correlationId before execution and stamp liveness vector on completion
+- [x] **SCHED-09**: Skipped job (due to DisallowConcurrentExecution) produces no new stamp -> detected by liveness probe
+- [x] **SCHED-10**: Quartz misfire handling uses DoNothing (skip stale, wait for next trigger)
 
 ### High Availability
 
@@ -113,7 +113,7 @@ Requirements for initial release. Framework + Simetra virtual device only, no re
 ### Lifecycle
 
 - [ ] **LIFE-01**: 11-step startup sequence executed in order via IHostedService registration
-- [ ] **LIFE-02**: First correlationId generated directly on startup before any job fires (not via scheduler)
+- [x] **LIFE-02**: First correlationId generated directly on startup before any job fires (not via scheduler)
 - [ ] **LIFE-03**: Startup merges hardcoded (Source=Module) + configurable (Source=Configuration) poll definitions per device
 - [ ] **LIFE-04**: Graceful shutdown with CancellationToken and time-budgeted steps totaling ~30s
 - [ ] **LIFE-05**: Shutdown order: release lease -> stop listener -> stop scheduler -> drain channels -> flush telemetry
@@ -225,17 +225,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLUG-04 | Phase 5 | Complete |
 | PLUG-05 | Phase 5 | Complete |
 | PLUG-06 | Phase 5 | Complete |
-| SCHED-01 | Phase 6 | Pending |
-| SCHED-02 | Phase 6 | Pending |
-| SCHED-03 | Phase 6 | Pending |
-| SCHED-04 | Phase 6 | Pending |
-| SCHED-05 | Phase 6 | Pending |
-| SCHED-06 | Phase 6 | Pending |
-| SCHED-07 | Phase 6 | Pending |
-| SCHED-08 | Phase 6 | Pending |
-| SCHED-09 | Phase 6 | Pending |
-| SCHED-10 | Phase 6 | Pending |
-| LIFE-02 | Phase 6 | Pending |
+| SCHED-01 | Phase 6 | Complete |
+| SCHED-02 | Phase 6 | Complete |
+| SCHED-03 | Phase 6 | Complete |
+| SCHED-04 | Phase 6 | Complete |
+| SCHED-05 | Phase 6 | Complete |
+| SCHED-06 | Phase 6 | Complete |
+| SCHED-07 | Phase 6 | Complete |
+| SCHED-08 | Phase 6 | Complete |
+| SCHED-09 | Phase 6 | Complete |
+| SCHED-10 | Phase 6 | Complete |
+| LIFE-02 | Phase 6 | Complete |
 | TELEM-01 | Phase 7 | Pending |
 | TELEM-02 | Phase 7 | Pending |
 | TELEM-03 | Phase 7 | Pending |
