@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** The SNMP pipeline must reliably receive traps, poll devices, extract data, and emit telemetry to OTLP -- with automatic leader-follower failover ensuring no single point of failure.
-**Current focus:** Phase 6: Scheduling System
+**Current focus:** Phase 6: Scheduling System -- COMPLETE
 
 ## Current Position
 
-Phase: 6 of 10 (Scheduling System) -- IN PROGRESS
-Plan: 2 of 3 in current phase
-Status: In progress
-Last activity: 2026-02-15 -- Completed 06-02-PLAN.md (StatePollJob + MetricPollJob implementations)
+Phase: 6 of 10 (Scheduling System) -- COMPLETE
+Plan: 3 of 3 in current phase
+Status: Phase complete
+Last activity: 2026-02-15 -- Completed 06-03-PLAN.md (HeartbeatJob + CorrelationJob implementations)
 
-Progress: [██████████████░░░░░░░░░░░░░] 14/27 (52%)
+Progress: [███████████████░░░░░░░░░░░░] 15/27 (56%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14
-- Average duration: 2.8 min
-- Total execution time: 0.64 hours
+- Total plans completed: 15
+- Average duration: 2.7 min
+- Total execution time: 0.67 hours
 
 **By Phase:**
 
@@ -32,11 +32,11 @@ Progress: [██████████████░░░░░░░░░
 | 03-snmp-listener-device-routing | 3/3 | 8 min | 2.7 min |
 | 04-processing-pipeline | 2/2 | 4 min | 2.2 min |
 | 05-plugin-system-simetra-module | 2/2 | 3 min | 1.5 min |
-| 06-scheduling-system | 2/3 | 6 min | 3.0 min |
+| 06-scheduling-system | 3/3 | 8 min | 2.7 min |
 
 **Recent Trend:**
-- Last 5 plans: 2 min, 1 min, 5 min, 1 min
-- Trend: stable (poll jobs are lightweight replacements)
+- Last 5 plans: 1 min, 5 min, 1 min, 2 min
+- Trend: stable (job implementations are focused replacements)
 
 *Updated after each plan completion*
 
@@ -86,6 +86,9 @@ Recent decisions affecting current work:
 - [06-01]: SimetraModule instantiated directly in AddScheduling for compile-time module enumeration
 - [06-01]: All SimpleTriggers use WithMisfireHandlingInstructionNextWithRemainingCount (DoNothing is CronTrigger-only)
 - [06-01]: DI registration order extended: Configuration -> DeviceModules -> SnmpPipeline -> ProcessingPipeline -> Scheduling -> HealthChecks
+- [06-03]: Task.Run wraps synchronous Messenger.SendTrapV2 -- avoids blocking Quartz thread pool
+- [06-03]: CorrelationId format is Guid.NewGuid().ToString("N") -- 32-char hex, no hyphens
+- [06-03]: Correlation rotation logged at Information level -- operational visibility for ID transitions
 
 ### Pending Todos
 
@@ -98,5 +101,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-15
-Stopped at: Completed 06-02-PLAN.md (StatePollJob + MetricPollJob implementations)
+Stopped at: Completed 06-03-PLAN.md (HeartbeatJob + CorrelationJob implementations) -- Phase 6 complete
 Resume file: None
