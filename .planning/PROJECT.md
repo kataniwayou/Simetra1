@@ -8,6 +8,18 @@ Simetra is a headless .NET 9 background service that runs in Kubernetes and supe
 
 The SNMP pipeline must reliably receive traps, poll devices, extract data, and emit telemetry to OTLP -- with automatic leader-follower failover ensuring no single point of failure.
 
+## Current State
+
+**Shipped:** v1.0 (2026-02-16)
+
+The v1.0 milestone delivered a fully integrated, production-ready SNMP supervisor with:
+- 4-layer pipeline (Listener -> Routing/Filtering -> Extraction -> Processing)
+- 3 device modules: Simetra (virtual heartbeat), NPB (standard SNMP), OBP (non-standard SNMP)
+- Trap channel consumers completing the full pipeline
+- OpenTelemetry OTLP export with role-gated metrics/traces
+- K8s Lease-based leader-follower HA
+- 216 tests, 129 requirements, 0 tech debt
+
 ## Requirements
 
 ### Validated
@@ -17,7 +29,7 @@ The SNMP pipeline must reliably receive traps, poll devices, extract data, and e
 - Device filter (identify source device by IP) and trap filter (per-device OID filtering) -- v1.0
 - Channel-per-device isolation (System.Threading.Channels, bounded, drop-oldest) -- v1.0
 - Generic extractor using PollDefinitionDto with Role-based OID extraction -- v1.0
-- MetricName as prefix: each Role:Metric OID produces {MetricName}_{Property} -- v1.0
+- PropertyName as metric name (METR-01): clean snake_case, base labels provide context -- v1.0
 - EnumMap as metadata only (stored for Grafana value mappings, NOT reported to OTLP) -- v1.0
 - Unified PollDefinitionDto structure for traps, state polls, and metric polls -- v1.0
 - Source-based routing: Module -> metric + State Vector; Configuration -> metric only -- v1.0
@@ -31,34 +43,33 @@ The SNMP pipeline must reliably receive traps, poll devices, extract data, and e
 - OpenTelemetry integration with role-gated OTLP export -- v1.0
 - 11-step startup sequence and graceful shutdown with time-budgeted steps -- v1.0
 - Composable middleware chain for cross-cutting concerns -- v1.0
-- 139 unit + integration tests covering all core logic -- v1.0
+- Trap channel consumers (channel -> middleware -> extract -> process) -- v1.0
+- NPB device module: NOTIFICATION-TYPE traps, table-based port statistics, EnumMap -- v1.0
+- OBP device module: OBJECT-TYPE traps, per-link duplicated OIDs, 7 EnumMaps -- v1.0
+- End-to-end trap flow verified through full pipeline -- v1.0
+- 216 unit + integration tests covering all core logic -- v1.0
 
 ### Active
 
-- Trap channel consumers completing the full trap pipeline (read → middleware → extract → process)
-- NPB device module (reference implementation — standard SNMP device with NOTIFICATION-TYPE traps, table statistics)
-- OBP device module (reference implementation — non-standard device with per-link OIDs, OBJECT-TYPE traps)
-- End-to-end trap flow verified through full pipeline with real device module definitions
+(None -- run `/gsd:new-milestone` to define next milestone)
 
 ### Out of Scope
 
 - State Vector staleness checking (detecting dead listener) -- future milestone
 - Direct listener health check in readiness probe -- future milestone
-- Real device modules beyond NPB/OBP reference implementations -- v2.0
+- Real device modules beyond NPB/OBP reference implementations -- future milestone
 - SNMPv3 support -- v2c only for now
 - UI or API endpoints (headless service, probes only)
 - Dynamic configuration (hot reload) -- static config, restart required
-- ~~Trap channel consumers~~ -- moved to Active (v1.0)
 
 ## Context
 
 - Design document: `requirements and basic design.txt` (v4, comprehensive)
-- Shipped v1.0 with 6,940 LOC C# (3,983 src + 2,957 test), 139 tests
+- Shipped v1.0 with ~8,300 LOC C# (~4,500 src + ~3,500 test), 216 tests
 - Tech stack: .NET 9, SharpSnmpLib, Quartz.NET, OpenTelemetry, System.Threading.Channels
 - Test stack: xUnit 2.9.3, FluentAssertions 7.2.0 (Apache 2.0), Moq 4.20.72
 - Pipeline architecture inspired by ASP.NET middleware pattern
 - Local development runs single instance as always-leader via ILeaderElection abstraction
-- Trap channels getting consumers to complete the full pipeline
 - NPB (CGS Network Packet Broker) and OBP (GLSUN OTS3000 Optical Bypass) as reference device modules
 - NPB MIBs at `NPB/mibs/`, OBP MIB at `V5.2.4/BYPASS-CGS.mib`
 - Both devices share enterprise OID 1.3.6.1.4.1.47477 (CGS)
@@ -85,7 +96,7 @@ The SNMP pipeline must reliably receive traps, poll devices, extract data, and e
 | Framework-first, no real device modules | Prove pipeline architecture before adding device-specific logic | Good |
 | Unified PollDefinitionDto for traps + polls | Single structure simplifies extractor, enables config->code migration path | Good |
 | Role field (Metric/Label) on each OID entry | Fully generic extraction -- no per-device logic in extractor | Good |
-| MetricName as prefix, not full name | One DTO produces multiple metrics: {MetricName}_{Property} | Good |
+| PropertyName as metric name (METR-01) | Clean snake_case, base labels provide context, no MetricName prefix needed | Good |
 | EnumMap as metadata only | Raw SNMP integers for metrics; EnumMap stored for Grafana dashboards | Good |
 | ILeaderElection abstraction | AlwaysLeader for local dev, K8s Lease for production | Good |
 | Source field on DTO, not in config | Prevents misconfiguration, behavior determined by definition location | Good |
@@ -97,10 +108,10 @@ The SNMP pipeline must reliably receive traps, poll devices, extract data, and e
 | GracefulShutdownService as IHostedService | Registered last = stops first, orchestrates 5-step shutdown | Good |
 | RoleGatedExporter decorator pattern | Checks IsLeader on each Export call, dynamic role switching | Good |
 | Inverted TDD (implementation first) | Tests validate correctness after implementation, avoided rework from interface changes | Good |
-
-| PropertyName as metric name (no MetricName prefix) | Base labels (site, device_name, device_ip, device_type) provide all context; metric name is clean snake_case (e.g., port_rx_octets) | — Pending |
-| NPB + OBP as reference device modules | Demonstrate both standard (NOTIFICATION-TYPE, tables) and non-standard (OBJECT-TYPE traps, per-link OIDs) patterns | — Pending |
-| Trap consumers complete pipeline in v1.0 | Full end-to-end flow needed for reference implementations to be meaningful | — Pending |
+| NPB + OBP as reference device modules | Demonstrate both standard (NOTIFICATION-TYPE, tables) and non-standard (OBJECT-TYPE traps, per-link OIDs) patterns | Good |
+| Trap consumers complete pipeline in v1.0 | Full end-to-end flow needed for reference implementations to be meaningful | Good |
+| OBP OBJECT-TYPE traps use single OidEntryDto | OID is both identifier and value carrier for non-standard trap pattern | Good |
+| OBP EnumMaps follow MIB-authoritative values | Including na(3) for HeartStatus and PowerAlarmStatus -- matches actual device behavior | Good |
 
 ---
-*Last updated: 2026-02-16 after v1.0 scope extension (trap consumers + device modules)*
+*Last updated: 2026-02-16 after v1.0 milestone completion*

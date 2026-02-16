@@ -1,10 +1,10 @@
 # Project Milestones: Simetra
 
-## v1.0 Simetra SNMP Supervisor (Shipped: 2026-02-15)
+## v1.0 Simetra SNMP Supervisor (Shipped: 2026-02-16)
 
-**Delivered:** Complete SNMP supervisor framework with 4-layer pipeline, plugin system, OpenTelemetry, K8s leader-follower HA, health probes, and 139 tests proving end-to-end correctness.
+**Delivered:** Complete SNMP supervisor framework with 4-layer pipeline, plugin system, OpenTelemetry, K8s leader-follower HA, health probes, trap channel consumers, and 3 device modules (Simetra, NPB, OBP) with 216 tests proving end-to-end correctness.
 
-**Phases completed:** 1-10 (25 plans total)
+**Phases completed:** 1-13 (32 plans total)
 
 **Key accomplishments:**
 - 4-layer SNMP pipeline: Listener -> Routing/Filtering -> Extraction -> Processing
@@ -12,17 +12,20 @@
 - Quartz scheduling with poll, heartbeat, and correlation jobs + liveness vector
 - OpenTelemetry with OTLP export, role-gated by K8s Lease leader/follower status
 - K8s Lease-based leader-follower HA with near-instant failover on SIGTERM
-- 139 tests (unit + integration) with heartbeat loopback proving full pipeline
+- Trap channel consumers completing full pipeline (channel -> consumer -> extract -> process)
+- NPB device module (standard SNMP: NOTIFICATION-TYPE traps, table-based stats)
+- OBP device module (non-standard SNMP: OBJECT-TYPE traps, per-link duplicated OIDs)
+- PropertyName as metric name (METR-01) with base labels providing device context
 
 **Stats:**
-- 116 files created
-- 6,940 lines of C# (3,983 src + 2,957 test)
-- 10 phases, 25 plans
-- 1 day from start to ship
-- 95 v1 requirements delivered
+- ~8,300 lines of C# (~4,500 src + ~3,500 test)
+- 13 phases, 32 plans
+- 135 commits
+- 129 requirements delivered (95 core + 34 extension)
+- 216 tests passing
 
-**Git range:** `d2523eb` (init) -> `790fc46` (audit)
+**Git range:** `d2523eb` (init) -> `b28594e` (audit)
 
-**What's next:** v2.0 — Real device modules (router, switch), trap channel consumers, advanced monitoring
+**Archives:** [Roadmap](.planning/milestones/v1.0-ROADMAP.md) | [Requirements](.planning/milestones/v1.0-REQUIREMENTS.md) | [Audit](.planning/milestones/v1.0-MILESTONE-AUDIT.md)
 
 ---
