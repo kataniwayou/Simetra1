@@ -17,7 +17,9 @@ public sealed class DevicesOptionsValidator : IValidateOptions<DevicesOptions>
         "router",
         "switch",
         "loadbalancer",
-        "simetra"
+        "simetra",
+        "npb",
+        "obp"
     };
 
     public ValidateOptionsResult Validate(string? name, DevicesOptions options)
@@ -30,6 +32,9 @@ public sealed class DevicesOptionsValidator : IValidateOptions<DevicesOptions>
             var device = options.Devices[i];
             ValidateDevice(device, i, failures);
         }
+
+        // Duplicate detection across all devices
+        ValidateNoDuplicates(options.Devices, failures);
 
         return failures.Count > 0
             ? ValidateOptionsResult.Fail(failures)
@@ -61,6 +66,27 @@ public sealed class DevicesOptionsValidator : IValidateOptions<DevicesOptions>
         {
             var poll = device.MetricPolls[j];
             ValidateMetricPoll(poll, index, j, failures);
+        }
+    }
+
+    private static void ValidateNoDuplicates(List<DeviceOptions> devices, List<string> failures)
+    {
+        var seenNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var seenIps = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        for (var i = 0; i < devices.Count; i++)
+        {
+            var device = devices[i];
+
+            if (!string.IsNullOrWhiteSpace(device.Name) && !seenNames.Add(device.Name))
+            {
+                failures.Add($"Devices[{i}].Name '{device.Name}' is a duplicate — device names must be unique");
+            }
+
+            if (!string.IsNullOrWhiteSpace(device.IpAddress) && !seenIps.Add(device.IpAddress))
+            {
+                failures.Add($"Devices[{i}].IpAddress '{device.IpAddress}' is a duplicate — device IPs must be unique");
+            }
         }
     }
 

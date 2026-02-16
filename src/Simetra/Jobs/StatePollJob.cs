@@ -50,7 +50,7 @@ public sealed class StatePollJob : IJob
     {
         // SCHED-08: Read correlationId BEFORE execution
         var correlationId = _correlation.CurrentCorrelationId;
-        var jobKey = context.JobDetail.Key.ToString();
+        var jobKey = context.JobDetail.Key.Name;
 
         try
         {

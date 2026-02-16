@@ -226,4 +226,158 @@ public sealed class DevicesOptionsValidationTests
 
         result.Should().Be(ValidateOptionsResult.Success);
     }
+
+    [Theory]
+    [InlineData("npb")]
+    [InlineData("NPB")]
+    [InlineData("obp")]
+    [InlineData("OBP")]
+    public void Validate_WhenDeviceTypeIsNpbOrObp_ReturnsSuccess(string deviceType)
+    {
+        var options = CreateValidDevicesOptions();
+        options.Devices[0].DeviceType = deviceType;
+
+        var result = _validator.Validate(null, options);
+
+        result.Should().Be(ValidateOptionsResult.Success);
+    }
+
+    [Fact]
+    public void Validate_WhenDuplicateDeviceName_ReturnsFailure()
+    {
+        var options = CreateValidDevicesOptions();
+        options.Devices.Add(new DeviceOptions
+        {
+            Name = "router-core-1",
+            IpAddress = "10.0.1.2",
+            DeviceType = "router",
+            MetricPolls =
+            [
+                new MetricPollOptions
+                {
+                    MetricName = "simetra_cpu",
+                    MetricType = MetricType.Gauge,
+                    IntervalSeconds = 30,
+                    Oids =
+                    [
+                        new OidEntryOptions
+                        {
+                            Oid = "1.3.6.1.4.1.9999.1.3.1.0",
+                            PropertyName = "cpu_utilization",
+                            Role = OidRole.Metric,
+                        }
+                    ]
+                }
+            ]
+        });
+
+        var result = _validator.Validate(null, options);
+
+        result.Failed.Should().BeTrue();
+        result.FailureMessage.Should().Contain("Devices[1].Name 'router-core-1' is a duplicate");
+    }
+
+    [Fact]
+    public void Validate_WhenDuplicateDeviceIpAddress_ReturnsFailure()
+    {
+        var options = CreateValidDevicesOptions();
+        options.Devices.Add(new DeviceOptions
+        {
+            Name = "router-core-2",
+            IpAddress = "10.0.1.1",
+            DeviceType = "router",
+            MetricPolls =
+            [
+                new MetricPollOptions
+                {
+                    MetricName = "simetra_cpu",
+                    MetricType = MetricType.Gauge,
+                    IntervalSeconds = 30,
+                    Oids =
+                    [
+                        new OidEntryOptions
+                        {
+                            Oid = "1.3.6.1.4.1.9999.1.3.1.0",
+                            PropertyName = "cpu_utilization",
+                            Role = OidRole.Metric,
+                        }
+                    ]
+                }
+            ]
+        });
+
+        var result = _validator.Validate(null, options);
+
+        result.Failed.Should().BeTrue();
+        result.FailureMessage.Should().Contain("Devices[1].IpAddress '10.0.1.1' is a duplicate");
+    }
+
+    [Fact]
+    public void Validate_WhenDuplicateNameIsCaseInsensitive_ReturnsFailure()
+    {
+        var options = CreateValidDevicesOptions();
+        options.Devices.Add(new DeviceOptions
+        {
+            Name = "Router-Core-1",
+            IpAddress = "10.0.1.2",
+            DeviceType = "router",
+            MetricPolls =
+            [
+                new MetricPollOptions
+                {
+                    MetricName = "simetra_cpu",
+                    MetricType = MetricType.Gauge,
+                    IntervalSeconds = 30,
+                    Oids =
+                    [
+                        new OidEntryOptions
+                        {
+                            Oid = "1.3.6.1.4.1.9999.1.3.1.0",
+                            PropertyName = "cpu_utilization",
+                            Role = OidRole.Metric,
+                        }
+                    ]
+                }
+            ]
+        });
+
+        var result = _validator.Validate(null, options);
+
+        result.Failed.Should().BeTrue();
+        result.FailureMessage.Should().Contain("is a duplicate — device names must be unique");
+    }
+
+    [Fact]
+    public void Validate_WhenTwoDevicesWithUniqueNamesAndIps_ReturnsSuccess()
+    {
+        var options = CreateValidDevicesOptions();
+        options.Devices.Add(new DeviceOptions
+        {
+            Name = "switch-access-1",
+            IpAddress = "10.0.2.1",
+            DeviceType = "switch",
+            MetricPolls =
+            [
+                new MetricPollOptions
+                {
+                    MetricName = "simetra_cpu",
+                    MetricType = MetricType.Gauge,
+                    IntervalSeconds = 30,
+                    Oids =
+                    [
+                        new OidEntryOptions
+                        {
+                            Oid = "1.3.6.1.4.1.9999.1.3.1.0",
+                            PropertyName = "cpu_utilization",
+                            Role = OidRole.Metric,
+                        }
+                    ]
+                }
+            ]
+        });
+
+        var result = _validator.Validate(null, options);
+
+        result.Should().Be(ValidateOptionsResult.Success);
+    }
 }

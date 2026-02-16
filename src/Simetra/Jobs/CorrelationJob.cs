@@ -29,7 +29,7 @@ public sealed class CorrelationJob : IJob
 
     public Task Execute(IJobExecutionContext context)
     {
-        var jobKey = context.JobDetail.Key.ToString();
+        var jobKey = context.JobDetail.Key.Name;
 
         try
         {
