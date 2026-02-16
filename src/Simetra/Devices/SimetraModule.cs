@@ -22,12 +22,6 @@ public sealed class SimetraModule : IDeviceModule
     public string DeviceType => "simetra";
 
     /// <inheritdoc />
-    public string DeviceName => "simetra-heartbeat";
-
-    /// <inheritdoc />
-    public string IpAddress => "127.0.0.1";
-
-    /// <inheritdoc />
     public IReadOnlyList<PollDefinitionDto> TrapDefinitions { get; } = new List<PollDefinitionDto>
     {
         new PollDefinitionDto(

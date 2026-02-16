@@ -19,14 +19,13 @@ public sealed class DeviceRegistry : IDeviceRegistry
 
     /// <summary>
     /// Initializes the registry by building IP-to-device and name-to-device dictionaries
-    /// from configuration and code-defined device modules. Config devices are registered
-    /// first; module devices are registered second so they take precedence on IP collision.
+    /// from configuration. Each config device is matched to a code-defined module by
+    /// <see cref="IDeviceModule.DeviceType"/> to attach module-level trap definitions.
+    /// Devices without a matching module get empty trap definitions (poll-only devices).
     /// Each device's IP is normalized to IPv4 via <see cref="IPAddress.MapToIPv4"/>.
-    /// MetricPolls are converted to <see cref="PollDefinitionDto"/> via
-    /// <see cref="PollDefinitionDto.FromOptions"/>.
     /// </summary>
     /// <param name="devicesOptions">The configured devices to register.</param>
-    /// <param name="modules">Code-defined device modules discovered via DI.</param>
+    /// <param name="modules">Code-defined device modules providing type-level trap definitions.</param>
     public DeviceRegistry(
         IOptions<DevicesOptions> devicesOptions,
         IEnumerable<IDeviceModule> modules)
@@ -35,23 +34,19 @@ public sealed class DeviceRegistry : IDeviceRegistry
         _devices = new Dictionary<IPAddress, DeviceInfo>(devices.Count);
         _devicesByName = new Dictionary<string, DeviceInfo>(StringComparer.OrdinalIgnoreCase);
 
+        // Index modules by DeviceType for O(1) lookup
+        var modulesByType = modules.ToDictionary(m => m.DeviceType, StringComparer.OrdinalIgnoreCase);
+
         foreach (var d in devices)
         {
             var ip = IPAddress.Parse(d.IpAddress).MapToIPv4();
-            var trapDefinitions = d.MetricPolls
-                .Select(PollDefinitionDto.FromOptions)
-                .ToList()
-                .AsReadOnly();
+
+            // Attach module trap definitions by matching DeviceType
+            var trapDefinitions = modulesByType.TryGetValue(d.DeviceType, out var module)
+                ? module.TrapDefinitions
+                : Array.Empty<PollDefinitionDto>().AsReadOnly();
 
             var info = new DeviceInfo(d.Name, d.IpAddress, d.DeviceType, trapDefinitions);
-            _devices[ip] = info;
-            _devicesByName[info.Name] = info;
-        }
-
-        foreach (var module in modules)
-        {
-            var ip = IPAddress.Parse(module.IpAddress).MapToIPv4();
-            var info = new DeviceInfo(module.DeviceName, module.IpAddress, module.DeviceType, module.TrapDefinitions);
             _devices[ip] = info;
             _devicesByName[info.Name] = info;
         }

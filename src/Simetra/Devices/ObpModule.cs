@@ -134,12 +134,6 @@ public sealed class ObpModule : IDeviceModule
     public string DeviceType => "OBP";
 
     /// <inheritdoc />
-    public string DeviceName => "obp-01";
-
-    /// <inheritdoc />
-    public string IpAddress => "10.0.20.1";
-
-    /// <inheritdoc />
     public IReadOnlyList<PollDefinitionDto> TrapDefinitions { get; } = new List<PollDefinitionDto>
     {
         // OBP-03: link_WorkModeChange trap (linkNOBPTrap.1)

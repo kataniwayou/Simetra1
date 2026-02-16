@@ -16,6 +16,10 @@ namespace Simetra.Tests.Integration;
 /// </summary>
 public class HeartbeatLoopbackTests : IDisposable
 {
+    // Device identity for the Simetra virtual device (matches appsettings.json)
+    private const string TestDeviceName = "simetra-supervisor";
+    private const string TestDeviceIp = "127.0.0.1";
+
     private readonly Meter _meter;
     private readonly MeterListener _listener;
     private readonly SnmpExtractorService _extractor;
@@ -62,8 +66,8 @@ public class HeartbeatLoopbackTests : IDisposable
 
         // DeviceInfo matching the Simetra virtual device
         _simetraDevice = new DeviceInfo(
-            _module.DeviceName,
-            _module.IpAddress,
+            TestDeviceName,
+            TestDeviceIp,
             _module.DeviceType,
             _module.TrapDefinitions);
 
@@ -108,7 +112,7 @@ public class HeartbeatLoopbackTests : IDisposable
         _coordinator.Process(result, _simetraDevice, "test-corr-1");
 
         // Assert Step 3: State Vector entry exists with correct data
-        var entry = _stateVector.GetEntry(_module.DeviceName, _heartbeatDefinition.MetricName);
+        var entry = _stateVector.GetEntry(TestDeviceName, _heartbeatDefinition.MetricName);
 
         entry.Should().NotBeNull("State Vector should contain entry after processing Module-sourced data");
         entry!.CorrelationId.Should().Be("test-corr-1", "correlation ID should propagate through the pipeline");

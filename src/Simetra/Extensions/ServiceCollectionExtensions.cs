@@ -111,9 +111,11 @@ public static class ServiceCollectionExtensions
                 metrics.AddMeter(TelemetryConstants.MeterName);
                 metrics.AddRuntimeInstrumentation();
 
-                // Manual OTLP metric exporter wrapped in RoleGatedExporter.
+                // Manual OTLP metric exporter wrapped in MetricRoleGatedExporter.
                 // Cannot use AddOtlpExporter() because it creates and registers the exporter
-                // internally, preventing wrapping with RoleGatedExporter. (HA-03, HA-04)
+                // internally, preventing wrapping with MetricRoleGatedExporter. (HA-03, HA-04)
+                // MetricRoleGatedExporter gates only Simetra.Metrics behind leader election;
+                // runtime metrics (System.Runtime) are exported by all pods for operational visibility.
                 metrics.AddReader(sp =>
                 {
                     var leaderElection = sp.GetRequiredService<ILeaderElection>();
@@ -121,7 +123,7 @@ public static class ServiceCollectionExtensions
                     {
                         Endpoint = new Uri(otlpOptions.Endpoint)
                     });
-                    var roleGated = new RoleGatedExporter<Metric>(otlpExporter, leaderElection);
+                    var roleGated = new MetricRoleGatedExporter(otlpExporter, leaderElection, TelemetryConstants.MeterName);
                     return new PeriodicExportingMetricReader(roleGated);
                 });
             })
@@ -418,32 +420,40 @@ public static class ServiceCollectionExtensions
             intervalRegistry.Register("correlation", correlationOptions.IntervalSeconds);
 
             // --- Dynamic jobs: State polls (Source=Module) ---
-            // Device modules are code-defined and known at compile time. Create instances
-            // directly for poll definition enumeration at registration time.
+            // Modules are type-level: iterate config devices, look up module by DeviceType,
+            // and schedule state polls for each matching device.
             var simetraModule = new SimetraModule();
             var npbModule = new NpbModule();
             var obpModule = new ObpModule();
-            var allModules = new IDeviceModule[] { simetraModule, npbModule, obpModule };
-
-            foreach (var module in allModules)
+            var modulesByType = new Dictionary<string, IDeviceModule>(StringComparer.OrdinalIgnoreCase)
             {
+                [simetraModule.DeviceType] = simetraModule,
+                [npbModule.DeviceType] = npbModule,
+                [obpModule.DeviceType] = obpModule
+            };
+
+            foreach (var device in devicesOptions.Devices)
+            {
+                if (!modulesByType.TryGetValue(device.DeviceType, out var module))
+                    continue;
+
                 foreach (var poll in module.StatePollDefinitions)
                 {
-                    var jobKey = new JobKey($"state-poll-{module.DeviceName}-{poll.MetricName}");
+                    var jobKey = new JobKey($"state-poll-{device.Name}-{poll.MetricName}");
                     q.AddJob<StatePollJob>(j => j
                         .WithIdentity(jobKey)
-                        .UsingJobData("deviceName", module.DeviceName)
+                        .UsingJobData("deviceName", device.Name)
                         .UsingJobData("metricName", poll.MetricName));
 
                     q.AddTrigger(t => t
                         .ForJob(jobKey)
-                        .WithIdentity($"state-poll-{module.DeviceName}-{poll.MetricName}-trigger")
+                        .WithIdentity($"state-poll-{device.Name}-{poll.MetricName}-trigger")
                         .StartNow()
                         .WithSimpleSchedule(s => s
                             .WithIntervalInSeconds(poll.IntervalSeconds)
                             .RepeatForever()
                             .WithMisfireHandlingInstructionNextWithRemainingCount()));
-                    intervalRegistry.Register($"state-poll-{module.DeviceName}-{poll.MetricName}", poll.IntervalSeconds);
+                    intervalRegistry.Register($"state-poll-{device.Name}-{poll.MetricName}", poll.IntervalSeconds);
                 }
             }
 

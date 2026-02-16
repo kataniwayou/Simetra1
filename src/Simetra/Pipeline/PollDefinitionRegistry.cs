@@ -19,11 +19,12 @@ public sealed class PollDefinitionRegistry : IPollDefinitionRegistry
 
     /// <summary>
     /// Initializes the registry by indexing all poll definitions from modules and configuration.
-    /// Module <see cref="IDeviceModule.StatePollDefinitions"/> become state poll entries;
-    /// configuration <see cref="DeviceOptions.MetricPolls"/> become metric poll entries.
+    /// Module <see cref="IDeviceModule.StatePollDefinitions"/> are applied to every config device
+    /// whose <see cref="DeviceOptions.DeviceType"/> matches the module's <see cref="IDeviceModule.DeviceType"/>.
+    /// Configuration <see cref="DeviceOptions.MetricPolls"/> become metric poll entries.
     /// </summary>
     /// <param name="devicesOptions">The configured devices providing metric poll definitions.</param>
-    /// <param name="modules">Code-defined device modules providing state poll definitions.</param>
+    /// <param name="modules">Code-defined device modules providing type-level state poll definitions.</param>
     public PollDefinitionRegistry(
         IOptions<DevicesOptions> devicesOptions,
         IEnumerable<IDeviceModule> modules)
@@ -32,14 +33,20 @@ public sealed class PollDefinitionRegistry : IPollDefinitionRegistry
         _statePollDefinitions = new List<(string, PollDefinitionDto)>();
         _metricPollDefinitions = new List<(string, PollDefinitionDto)>();
 
-        // Index state poll definitions from modules (Source=Module)
-        foreach (var module in modules)
+        // Index modules by DeviceType for O(1) lookup
+        var modulesByType = modules.ToDictionary(m => m.DeviceType, StringComparer.OrdinalIgnoreCase);
+
+        // Apply module state poll definitions to each config device by DeviceType
+        foreach (var device in devicesOptions.Value.Devices)
         {
-            foreach (var def in module.StatePollDefinitions)
+            if (modulesByType.TryGetValue(device.DeviceType, out var module))
             {
-                var key = $"{module.DeviceName}::{def.MetricName}";
-                _definitions[key] = def;
-                _statePollDefinitions.Add((module.DeviceName, def));
+                foreach (var def in module.StatePollDefinitions)
+                {
+                    var key = $"{device.Name}::{def.MetricName}";
+                    _definitions[key] = def;
+                    _statePollDefinitions.Add((device.Name, def));
+                }
             }
         }
 

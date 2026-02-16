@@ -3,36 +3,32 @@ using Simetra.Models;
 namespace Simetra.Devices;
 
 /// <summary>
-/// Data contract for a device module that provides device identity and poll definitions
-/// via code rather than configuration. Implementations are registered in DI and discovered
-/// automatically by <c>DeviceRegistry</c> and <c>DeviceChannelManager</c> at startup.
+/// Type-level data contract for a device module that provides trap and poll definitions
+/// for all devices of a given <see cref="DeviceType"/>. Implementations are registered
+/// in DI and discovered automatically by <c>DeviceRegistry</c>, <c>PollDefinitionRegistry</c>,
+/// and scheduling at startup. Device identity (Name, IP) comes from configuration —
+/// the module provides only type-level OID definitions.
 /// All poll definitions returned by a module must have <c>Source = MetricPollSource.Module</c>.
 /// </summary>
 public interface IDeviceModule
 {
     /// <summary>
-    /// Device type identifier (e.g., "simetra", "router").
+    /// Device type identifier (e.g., "simetra", "NPB", "OBP"). Matched against
+    /// <see cref="Configuration.DeviceOptions.DeviceType"/> to apply module definitions
+    /// to all config devices of this type.
     /// </summary>
     string DeviceType { get; }
 
     /// <summary>
-    /// Human-readable device name (e.g., "simetra-heartbeat").
-    /// </summary>
-    string DeviceName { get; }
-
-    /// <summary>
-    /// IPv4 address string of the device (e.g., "127.0.0.1").
-    /// </summary>
-    string IpAddress { get; }
-
-    /// <summary>
-    /// Trap definitions for this device, used for OID matching on incoming traps.
+    /// Trap definitions for this device type, used for OID matching on incoming traps.
+    /// Applied to every config device whose DeviceType matches this module.
     /// All entries must have <c>Source = MetricPollSource.Module</c>.
     /// </summary>
     IReadOnlyList<PollDefinitionDto> TrapDefinitions { get; }
 
     /// <summary>
-    /// State poll definitions for this device, used for periodic SNMP polling.
+    /// State poll definitions for this device type, used for periodic SNMP polling.
+    /// Applied to every config device whose DeviceType matches this module.
     /// All entries must have <c>Source = MetricPollSource.Module</c>.
     /// </summary>
     IReadOnlyList<PollDefinitionDto> StatePollDefinitions { get; }

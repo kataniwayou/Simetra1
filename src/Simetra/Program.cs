@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 using Simetra.Extensions;
 using Simetra.Pipeline;
 
@@ -64,4 +65,17 @@ app.MapHealthChecks("/healthz/live", new HealthCheckOptions
     }
 });
 
-app.Run();
+try
+{
+    app.Run();
+}
+catch (OptionsValidationException ex)
+{
+    Console.Error.WriteLine("Configuration validation failed:");
+    foreach (var failure in ex.Failures)
+    {
+        Console.Error.WriteLine($"  - {failure}");
+    }
+
+    throw;
+}

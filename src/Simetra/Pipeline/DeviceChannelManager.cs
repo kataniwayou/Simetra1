@@ -2,7 +2,6 @@ using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Simetra.Configuration;
-using Simetra.Devices;
 
 namespace Simetra.Pipeline;
 
@@ -19,26 +18,21 @@ public sealed class DeviceChannelManager : IDeviceChannelManager
 
     /// <summary>
     /// Initializes a new instance, creating one bounded channel per device from
-    /// configuration and code-defined device modules.
+    /// configuration. Device identity comes from config; modules are type-level only.
     /// </summary>
     /// <param name="devicesOptions">Device configurations defining which channels to create.</param>
     /// <param name="channelsOptions">Channel capacity configuration.</param>
-    /// <param name="modules">Code-defined device modules discovered via DI.</param>
     /// <param name="logger">Logger for item-dropped callbacks and lifecycle operations.</param>
     public DeviceChannelManager(
         IOptions<DevicesOptions> devicesOptions,
         IOptions<ChannelsOptions> channelsOptions,
-        IEnumerable<IDeviceModule> modules,
         ILogger<DeviceChannelManager> logger)
     {
         _logger = logger;
         var capacity = channelsOptions.Value.BoundedCapacity;
-        var configDeviceNames = devicesOptions.Value.Devices.Select(d => d.Name);
-        var moduleDeviceNames = modules.Select(m => m.DeviceName);
-        var allDeviceNames = configDeviceNames.Concat(moduleDeviceNames);
         _channels = new Dictionary<string, Channel<TrapEnvelope>>(StringComparer.Ordinal);
 
-        foreach (var deviceName in allDeviceNames)
+        foreach (var deviceName in devicesOptions.Value.Devices.Select(d => d.Name))
         {
             var options = new BoundedChannelOptions(capacity)
             {

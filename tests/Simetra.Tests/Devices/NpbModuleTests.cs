@@ -18,18 +18,6 @@ public class NpbModuleTests
         _sut.DeviceType.Should().Be("NPB");
     }
 
-    [Fact]
-    public void DeviceName_IsNpb2e01()
-    {
-        _sut.DeviceName.Should().Be("npb-2e-01");
-    }
-
-    [Fact]
-    public void IpAddress_Is10_0_10_1()
-    {
-        _sut.IpAddress.Should().Be("10.0.10.1");
-    }
-
     // --- TrapDefinitions Tests ---
 
     [Fact]
@@ -153,21 +141,21 @@ public class NpbModuleTests
     public void StatePollDefinitions_LinkStatus_HasEnumMap()
     {
         var def = _sut.StatePollDefinitions.First(d => d.MetricName == "port_link_status");
-        def.Oids.First().EnumMap.Should().NotBeNull();
+        def.Oids.First(o => o.Role == OidRole.Metric).EnumMap.Should().NotBeNull();
     }
 
     [Fact]
     public void StatePollDefinitions_LinkStatus_EnumMap_HasFiveEntries()
     {
         var def = _sut.StatePollDefinitions.First(d => d.MetricName == "port_link_status");
-        def.Oids.First().EnumMap.Should().HaveCount(5);
+        def.Oids.First(o => o.Role == OidRole.Metric).EnumMap.Should().HaveCount(5);
     }
 
     [Fact]
     public void StatePollDefinitions_LinkStatus_EnumMap_MapsCorrectValues()
     {
         var def = _sut.StatePollDefinitions.First(d => d.MetricName == "port_link_status");
-        var enumMap = def.Oids.First().EnumMap!;
+        var enumMap = def.Oids.First(o => o.Role == OidRole.Metric).EnumMap!;
 
         enumMap.Should().ContainKey(-1).WhoseValue.Should().Be("unknown");
         enumMap.Should().ContainKey(0).WhoseValue.Should().Be("down");

@@ -24,6 +24,10 @@ namespace Simetra.Tests.Integration;
 /// </summary>
 public class TrapConsumerFlowTests : IDisposable
 {
+    // Device identity for the Simetra virtual device (matches appsettings.json)
+    private const string TestDeviceName = "simetra-supervisor";
+    private const string TestDeviceIp = "127.0.0.1";
+
     private readonly Meter _meter;
     private readonly MeterListener _meterListener;
     private readonly SimetraModule _module;
@@ -70,8 +74,8 @@ public class TrapConsumerFlowTests : IDisposable
 
         // DeviceInfo matching the Simetra virtual device
         _simetraDevice = new DeviceInfo(
-            _module.DeviceName,
-            _module.IpAddress,
+            TestDeviceName,
+            TestDeviceIp,
             _module.DeviceType,
             _module.TrapDefinitions);
 
@@ -164,7 +168,7 @@ public class TrapConsumerFlowTests : IDisposable
     {
         // Arrange: Create channel, consumer, and a heartbeat trap envelope
         var channel = CreateChannel();
-        var consumer = CreateConsumer(channel, _module.DeviceName, _simetraDevice);
+        var consumer = CreateConsumer(channel, TestDeviceName, _simetraDevice);
         var envelope = MakeHeartbeatEnvelope("e2e-test-corr-1");
 
         // Act: Write envelope to channel, complete channel, start/stop consumer
@@ -176,7 +180,7 @@ public class TrapConsumerFlowTests : IDisposable
         await consumer.StopAsync(CancellationToken.None);
 
         // Assert: State Vector entry exists with correct data
-        var entry = _stateVector.GetEntry(_module.DeviceName, _heartbeatDefinition.MetricName);
+        var entry = _stateVector.GetEntry(TestDeviceName, _heartbeatDefinition.MetricName);
 
         entry.Should().NotBeNull("State Vector should be updated by consumer pipeline");
         entry!.CorrelationId.Should().Be("e2e-test-corr-1",
@@ -200,7 +204,7 @@ public class TrapConsumerFlowTests : IDisposable
     {
         // Arrange: 3 envelopes with different correlationIds
         var channel = CreateChannel();
-        var consumer = CreateConsumer(channel, _module.DeviceName, _simetraDevice);
+        var consumer = CreateConsumer(channel, TestDeviceName, _simetraDevice);
 
         var envelope1 = MakeHeartbeatEnvelope("corr-1");
         var envelope2 = MakeHeartbeatEnvelope("corr-2");
@@ -217,7 +221,7 @@ public class TrapConsumerFlowTests : IDisposable
         await consumer.StopAsync(CancellationToken.None);
 
         // Assert: State Vector entry exists (last one wins for MetricName)
-        var entry = _stateVector.GetEntry(_module.DeviceName, _heartbeatDefinition.MetricName);
+        var entry = _stateVector.GetEntry(TestDeviceName, _heartbeatDefinition.MetricName);
         entry.Should().NotBeNull("State Vector should contain entry after processing 3 traps");
         entry!.CorrelationId.Should().Be("corr-3",
             "last write wins -- correlationId should be from the final envelope");
@@ -235,7 +239,7 @@ public class TrapConsumerFlowTests : IDisposable
     {
         // Arrange: Envelope with MatchedDefinition = null (unmatched trap)
         var channel = CreateChannel();
-        var consumer = CreateConsumer(channel, _module.DeviceName, _simetraDevice);
+        var consumer = CreateConsumer(channel, TestDeviceName, _simetraDevice);
 
         var envelope = new TrapEnvelope
         {
@@ -260,7 +264,7 @@ public class TrapConsumerFlowTests : IDisposable
         await consumer.StopAsync(CancellationToken.None);
 
         // Assert: No State Vector entry
-        var entry = _stateVector.GetEntry(_module.DeviceName, _heartbeatDefinition.MetricName);
+        var entry = _stateVector.GetEntry(TestDeviceName, _heartbeatDefinition.MetricName);
         entry.Should().BeNull("unmatched traps should not produce State Vector entries");
 
         // Assert: No metrics recorded

@@ -71,12 +71,6 @@ public sealed class NpbModule : IDeviceModule
     public string DeviceType => "NPB";
 
     /// <inheritdoc />
-    public string DeviceName => "npb-2e-01";
-
-    /// <inheritdoc />
-    public string IpAddress => "10.0.10.1";
-
-    /// <inheritdoc />
     public IReadOnlyList<PollDefinitionDto> TrapDefinitions { get; } = new List<PollDefinitionDto>
     {
         // portLinkUp trap (NPB-02): 6 varbinds
@@ -115,11 +109,13 @@ public sealed class NpbModule : IDeviceModule
     public IReadOnlyList<PollDefinitionDto> StatePollDefinitions { get; } = new List<PollDefinitionDto>
     {
         // RxPackets poll (NPB-06): Module-source, Counter
+        // Includes port_number label for port-level metric distinguishing.
         new PollDefinitionDto(
             MetricName: "port_rx_packets",
             MetricType: MetricType.Counter,
             Oids: new List<OidEntryDto>
             {
+                new OidEntryDto(PortLogicalPortNumberOid, "port_number", OidRole.Label, null),
                 new OidEntryDto(RxPacketsOid, "port_rx_packets", OidRole.Metric, null)
             }.AsReadOnly(),
             IntervalSeconds: 30,
@@ -131,6 +127,7 @@ public sealed class NpbModule : IDeviceModule
             MetricType: MetricType.Counter,
             Oids: new List<OidEntryDto>
             {
+                new OidEntryDto(PortLogicalPortNumberOid, "port_number", OidRole.Label, null),
                 new OidEntryDto(TxPacketsOid, "port_tx_packets", OidRole.Metric, null)
             }.AsReadOnly(),
             IntervalSeconds: 30,
@@ -142,6 +139,7 @@ public sealed class NpbModule : IDeviceModule
             MetricType: MetricType.Gauge,
             Oids: new List<OidEntryDto>
             {
+                new OidEntryDto(PortLogicalPortNumberOid, "port_number", OidRole.Label, null),
                 new OidEntryDto(PortLinkStatusOid, "port_link_status", OidRole.Metric, LinkStatusEnumMap)
             }.AsReadOnly(),
             IntervalSeconds: 30,

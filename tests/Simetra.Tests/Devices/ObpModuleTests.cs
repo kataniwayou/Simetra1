@@ -18,18 +18,6 @@ public class ObpModuleTests
         _sut.DeviceType.Should().Be("OBP");
     }
 
-    [Fact]
-    public void DeviceName_IsObp01()
-    {
-        _sut.DeviceName.Should().Be("obp-01");
-    }
-
-    [Fact]
-    public void IpAddress_Is10_0_20_1()
-    {
-        _sut.IpAddress.Should().Be("10.0.20.1");
-    }
-
     // --- TrapDefinitions Tests ---
 
     [Fact]

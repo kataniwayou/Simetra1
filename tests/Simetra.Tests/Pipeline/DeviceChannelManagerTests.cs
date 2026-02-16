@@ -6,8 +6,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Simetra.Configuration;
-using Simetra.Devices;
-using Simetra.Models;
 using Simetra.Pipeline;
 
 namespace Simetra.Tests.Pipeline;
@@ -42,14 +40,12 @@ public class DeviceChannelManagerTests
 
     private static DeviceChannelManager CreateManager(
         DevicesOptions devicesOptions,
-        int boundedCapacity = 100,
-        params IDeviceModule[] modules)
+        int boundedCapacity = 100)
     {
         var channelsOptions = new ChannelsOptions { BoundedCapacity = boundedCapacity };
         return new DeviceChannelManager(
             Options.Create(devicesOptions),
             Options.Create(channelsOptions),
-            modules.AsEnumerable(),
             Mock.Of<ILogger<DeviceChannelManager>>());
     }
 
@@ -141,20 +137,4 @@ public class DeviceChannelManagerTests
         await act.Should().ThrowAsync<ChannelClosedException>();
     }
 
-    [Fact]
-    public void ModuleDevices_CreateChannels()
-    {
-        var moduleMock = new Mock<IDeviceModule>();
-        moduleMock.Setup(m => m.DeviceName).Returns("module-device");
-        moduleMock.Setup(m => m.IpAddress).Returns("127.0.0.1");
-        moduleMock.Setup(m => m.DeviceType).Returns("simetra");
-        moduleMock.Setup(m => m.TrapDefinitions).Returns(new List<PollDefinitionDto>().AsReadOnly());
-        moduleMock.Setup(m => m.StatePollDefinitions).Returns(new List<PollDefinitionDto>().AsReadOnly());
-
-        var manager = CreateManager(MakeDevicesOptions(), boundedCapacity: 10, moduleMock.Object);
-
-        manager.DeviceNames.Should().Contain("module-device");
-        var act = () => manager.GetWriter("module-device");
-        act.Should().NotThrow();
-    }
 }

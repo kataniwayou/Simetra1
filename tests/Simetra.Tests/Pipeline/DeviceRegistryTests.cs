@@ -95,25 +95,29 @@ public class DeviceRegistryTests
     }
 
     [Fact]
-    public void ModuleDevices_OverrideConfigOnIpCollision()
+    public void ConfigDevice_MatchingModule_GetsTrapDefinitions()
     {
-        var options = MakeDevicesOptions(MakeDeviceOptions("config-device", "10.0.0.1"));
+        var options = MakeDevicesOptions(MakeDeviceOptions("config-device", "10.0.0.1", "simetra"));
 
-        var moduleTrapDefs = new List<PollDefinitionDto>().AsReadOnly();
-        var moduleStateDefs = new List<PollDefinitionDto>().AsReadOnly();
+        var trapDef = new PollDefinitionDto(
+            "heartbeat",
+            MetricType.Gauge,
+            Array.Empty<OidEntryDto>(),
+            0,
+            MetricPollSource.Module);
+        var moduleTrapDefs = new List<PollDefinitionDto> { trapDef }.AsReadOnly();
 
         var moduleMock = new Mock<IDeviceModule>();
-        moduleMock.Setup(m => m.DeviceName).Returns("module-device");
-        moduleMock.Setup(m => m.IpAddress).Returns("10.0.0.1");
         moduleMock.Setup(m => m.DeviceType).Returns("simetra");
         moduleMock.Setup(m => m.TrapDefinitions).Returns(moduleTrapDefs);
-        moduleMock.Setup(m => m.StatePollDefinitions).Returns(moduleStateDefs);
+        moduleMock.Setup(m => m.StatePollDefinitions).Returns(new List<PollDefinitionDto>().AsReadOnly());
 
         var registry = CreateRegistry(options, moduleMock.Object);
 
         var found = registry.TryGetDevice(IPAddress.Parse("10.0.0.1"), out var device);
 
         found.Should().BeTrue();
-        device!.Name.Should().Be("module-device", "module devices override config on IP collision");
+        device!.Name.Should().Be("config-device", "device name comes from config, not module");
+        device.TrapDefinitions.Should().HaveCount(1, "module trap definitions should be attached by DeviceType match");
     }
 }
