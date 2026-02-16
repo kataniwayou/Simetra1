@@ -53,23 +53,23 @@ This refines the v1.0 `{MetricName}_{Property}` pattern — the PropertyName val
 
 ### OBP Device Module (17)
 
-- [ ] **OBP-01**: ObpModule implements IDeviceModule with device type "OBP"
-- [ ] **OBP-02**: Trap definition for linkN_StateChange (linkNOBPTrap.2) with values bypass(0), primary(1)
-- [ ] **OBP-03**: Trap definition for linkN_WorkModeChange (linkNOBPTrap.1) with values manualMode(0), autoMode(1)
-- [ ] **OBP-04**: Trap definition for linkN_PowerAlarmBypass2Changed (linkNOBPTrap.19) with power alarm values
-- [ ] **OBP-05**: Trap definitions for NMU-level traps: systemStartup (nmuTrap.1), cardStatusChanged (nmuTrap.2)
-- [ ] **OBP-06**: Poll definition Source=Configuration for linkN_R1Power → metric name `r1_power` (DisplayString, optical power)
-- [ ] **OBP-07**: Poll definition Source=Configuration for linkN_R2Power → metric name `r2_power` (DisplayString, optical power)
-- [ ] **OBP-08**: Poll definition Source=Module for linkN_State → metric name `link_state` (INTEGER: off(0)/on(1))
-- [ ] **OBP-09**: Poll definition Source=Module for linkN_Channel → metric name `link_channel` (INTEGER: bypass(0)/primary(1))
-- [ ] **OBP-10**: Poll definition Source=Module for linkN_WorkMode → metric name `work_mode` (INTEGER: manualMode(0)/autoMode(1))
-- [ ] **OBP-11**: Poll definition Source=Module for linkN_ActiveHeartStatus → metric name `active_heart_status` (INTEGER: alarm(0)/normal(1)/off(2))
-- [ ] **OBP-12**: Poll definition Source=Module for linkN_PassiveHeartStatus → metric name `passive_heart_status` (INTEGER: alarm(0)/normal(1)/off(2))
-- [ ] **OBP-13**: Poll definition Source=Module for linkN_PowerAlarmStatus → metric name `power_alarm_status` (INTEGER: off(0)/alarm(1))
-- [ ] **OBP-14**: Poll definitions Source=Module for NMU-level: power1State → `power1_state`, power2State → `power2_state` (INTEGER: off(0)/on(1))
-- [ ] **OBP-15**: EnumMaps for all INTEGER status fields (channel, workMode, heartStatus, powerAlarm, linkState, powerState)
-- [ ] **OBP-16**: OBP registered in device module registry with test device configuration in appsettings.json
-- [ ] **OBP-17**: Handle non-standard per-link OID structure (link1-link32 duplicated OIDs, not SNMP tables)
+- [x] **OBP-01**: ObpModule implements IDeviceModule with device type "OBP"
+- [x] **OBP-02**: Trap definition for linkN_StateChange (linkNOBPTrap.2) with values bypass(0), primary(1)
+- [x] **OBP-03**: Trap definition for linkN_WorkModeChange (linkNOBPTrap.1) with values manualMode(0), autoMode(1)
+- [x] **OBP-04**: Trap definition for linkN_PowerAlarmBypass2Changed (linkNOBPTrap.19) with power alarm values
+- [x] **OBP-05**: Trap definitions for NMU-level traps: systemStartup (nmuTrap.1), cardStatusChanged (nmuTrap.2)
+- [x] **OBP-06**: Poll definition Source=Configuration for linkN_R1Power → metric name `r1_power` (DisplayString, optical power)
+- [x] **OBP-07**: Poll definition Source=Configuration for linkN_R2Power → metric name `r2_power` (DisplayString, optical power)
+- [x] **OBP-08**: Poll definition Source=Module for linkN_State → metric name `link_state` (INTEGER: off(0)/on(1))
+- [x] **OBP-09**: Poll definition Source=Module for linkN_Channel → metric name `link_channel` (INTEGER: bypass(0)/primary(1))
+- [x] **OBP-10**: Poll definition Source=Module for linkN_WorkMode → metric name `work_mode` (INTEGER: manualMode(0)/autoMode(1))
+- [x] **OBP-11**: Poll definition Source=Module for linkN_ActiveHeartStatus → metric name `active_heart_status` (INTEGER: alarm(0)/normal(1)/off(2))
+- [x] **OBP-12**: Poll definition Source=Module for linkN_PassiveHeartStatus → metric name `passive_heart_status` (INTEGER: alarm(0)/normal(1)/off(2))
+- [x] **OBP-13**: Poll definition Source=Module for linkN_PowerAlarmStatus → metric name `power_alarm_status` (INTEGER: off(0)/alarm(1))
+- [x] **OBP-14**: Poll definitions Source=Module for NMU-level: power1State → `power1_state`, power2State → `power2_state` (INTEGER: off(0)/on(1))
+- [x] **OBP-15**: EnumMaps for all INTEGER status fields (channel, workMode, heartStatus, powerAlarm, linkState, powerState)
+- [x] **OBP-16**: OBP registered in device module registry with test device configuration in appsettings.json
+- [x] **OBP-17**: Handle non-standard per-link OID structure (link1-link32 duplicated OIDs, not SNMP tables)
 
 ## Out of Scope
 
@@ -103,23 +103,23 @@ This refines the v1.0 `{MetricName}_{Property}` pattern — the PropertyName val
 | NPB-07 | Phase 12 | Complete |
 | NPB-08 | Phase 12 | Complete |
 | NPB-09 | Phase 12 | Complete |
-| OBP-01 | Phase 13 | Pending |
-| OBP-02 | Phase 13 | Pending |
-| OBP-03 | Phase 13 | Pending |
-| OBP-04 | Phase 13 | Pending |
-| OBP-05 | Phase 13 | Pending |
-| OBP-06 | Phase 13 | Pending |
-| OBP-07 | Phase 13 | Pending |
-| OBP-08 | Phase 13 | Pending |
-| OBP-09 | Phase 13 | Pending |
-| OBP-10 | Phase 13 | Pending |
-| OBP-11 | Phase 13 | Pending |
-| OBP-12 | Phase 13 | Pending |
-| OBP-13 | Phase 13 | Pending |
-| OBP-14 | Phase 13 | Pending |
-| OBP-15 | Phase 13 | Pending |
-| OBP-16 | Phase 13 | Pending |
-| OBP-17 | Phase 13 | Pending |
+| OBP-01 | Phase 13 | Complete |
+| OBP-02 | Phase 13 | Complete |
+| OBP-03 | Phase 13 | Complete |
+| OBP-04 | Phase 13 | Complete |
+| OBP-05 | Phase 13 | Complete |
+| OBP-06 | Phase 13 | Complete |
+| OBP-07 | Phase 13 | Complete |
+| OBP-08 | Phase 13 | Complete |
+| OBP-09 | Phase 13 | Complete |
+| OBP-10 | Phase 13 | Complete |
+| OBP-11 | Phase 13 | Complete |
+| OBP-12 | Phase 13 | Complete |
+| OBP-13 | Phase 13 | Complete |
+| OBP-14 | Phase 13 | Complete |
+| OBP-15 | Phase 13 | Complete |
+| OBP-16 | Phase 13 | Complete |
+| OBP-17 | Phase 13 | Complete |
 
 **Coverage:**
 - Extension requirements: 34 total
@@ -128,4 +128,4 @@ This refines the v1.0 `{MetricName}_{Property}` pattern — the PropertyName val
 
 ---
 *Requirements defined: 2026-02-16*
-*Last updated: 2026-02-16 after Phase 12 completion*
+*Last updated: 2026-02-16 after Phase 13 completion — all requirements complete*

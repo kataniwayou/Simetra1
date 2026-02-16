@@ -12,7 +12,7 @@ Complete the v1.0 SNMP supervisor with trap channel consumers and two reference 
 |-------|------|------|-------------|-------------|
 | 11 | Trap Channel Consumers ✓ | Complete the trap pipeline — read from channels, process through middleware, extract, emit telemetry. Establish metric naming convention. | METR-01, TRAP-01..07 | 3 |
 | 12 | NPB Device Module ✓ | Reference implementation for standard SNMP device (NOTIFICATION-TYPE traps, table-based stats) | NPB-01..09 | 2 |
-| 13 | OBP Device Module | Reference implementation for non-standard SNMP device (per-link OIDs, OBJECT-TYPE traps) | OBP-01..17 | 2-3 |
+| 13 | OBP Device Module ✓ | Reference implementation for non-standard SNMP device (per-link OIDs, OBJECT-TYPE traps) | OBP-01..17 | 2 |
 
 ## Phase Details
 
@@ -92,6 +92,12 @@ Plans:
 6. EnumMaps for all INTEGER status fields resolve to human-readable values
 7. OBP device configured in appsettings.json with IP, community string, link number, poll intervals
 
+**Plans:** 2 plans
+
+Plans:
+- [x] 13-01-PLAN.md -- ObpModule implementation (IDeviceModule, OID constants, 7 EnumMaps, trap definitions, state polls, unit tests)
+- [x] 13-02-PLAN.md -- Registration + configuration (DI, Quartz, appsettings.json with Configuration-source R1Power/R2Power polls)
+
 **Dependencies:** Phase 11 (trap consumers), Phase 12 (NPB establishes the module pattern first)
 
 **Key context:**
@@ -117,4 +123,4 @@ Unmapped: 0
 
 ---
 *Roadmap created: 2026-02-16*
-*Last updated: 2026-02-16 (Phase 12 complete)*
+*Last updated: 2026-02-16 (Phase 13 complete — all phases done)*
