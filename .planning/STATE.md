@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-16)
 
 ## Current Position
 
-Phase: 11 of 13 (trap-channel-consumers)
-Plan: 3 of 3 complete
-Status: Phase complete
-Last activity: 2026-02-16 — Completed 11-03-PLAN.md (Trap Consumer Flow Integration Tests)
+Phase: 12 of 13 (npb-device-module)
+Plan: 1 of 2 complete
+Status: In progress
+Last activity: 2026-02-16 — Completed 12-01-PLAN.md (NpbModule implementation)
 
-Progress: [████████████████████████████████] 28/28 plans
+Progress: [█████████████████████████████░░░] 29/32 plans
 
 ## Performance Metrics
 
@@ -40,6 +40,9 @@ New: METR-01 -- PropertyName used directly as OTLP metric name; base labels prov
 New: Consumer-side middleware pipeline built separately from listener pipeline (no correlationId re-stamping).
 New: ChannelConsumerService registered in AddSnmpPipeline after listener, before GracefulShutdownService.
 New: TRAP-07 end-to-end integration tests prove full pipeline: channel -> consumer -> extractor -> coordinator -> State Vector + metrics.
+New: Trap MetricNames use concise snake_case without device prefix (port_link_up, port_link_down) -- base labels provide device context per METR-01.
+New: Trap IntervalSeconds=0 indicates event-driven definitions (not polled).
+New: LinkStatus defined as standalone StatePollDefinition with Gauge type and EnumMap for TEXTUAL-CONVENTION mapping.
 
 ### Pending Todos
 
@@ -51,6 +54,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-16T05:41:32Z
-Stopped at: Completed 11-03-PLAN.md (Trap Consumer Flow Integration Tests) -- Phase 11 complete
+Last session: 2026-02-16T06:26:45Z
+Stopped at: Completed 12-01-PLAN.md (NpbModule implementation) -- Phase 12 in progress
 Resume file: None
