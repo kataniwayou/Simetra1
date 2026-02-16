@@ -27,17 +27,17 @@ This refines the v1.0 `{MetricName}_{Property}` pattern — the PropertyName val
 
 ### Metric Naming (1)
 
-- [ ] **METR-01**: PollDefinitionDto PropertyName value used directly as metric name (snake_case), no MetricName prefix — base labels (site, device_name, device_ip, device_type) provide context
+- [x] **METR-01**: PollDefinitionDto PropertyName value used directly as metric name (snake_case), no MetricName prefix — base labels (site, device_name, device_ip, device_type) provide context
 
 ### Trap Pipeline Completion (7)
 
-- [ ] **TRAP-01**: ChannelConsumerService (BackgroundService) per device reads traps from Channel<TrapContext> via ReadAllAsync
-- [ ] **TRAP-02**: Consumer passes each trap through composable middleware chain (correlationId, logging, error handling)
-- [ ] **TRAP-03**: Consumer routes processed traps to SnmpExtractorService (Layer 3) for varbind extraction using device's trap PollDefinitionDto
-- [ ] **TRAP-04**: Extracted trap data routes to MetricFactoryService (metrics) and StateVectorService (Source=Module traps only)
-- [ ] **TRAP-05**: Consumer handles channel completion gracefully during shutdown (ReadAllAsync completes when channel writer is completed)
-- [ ] **TRAP-06**: Consumer logs trap processing at structured log level with device name and trap OID context
-- [ ] **TRAP-07**: End-to-end trap flow verified: listener → filter → channel → consumer → extractor → metrics + State Vector → OTLP export
+- [x] **TRAP-01**: ChannelConsumerService (BackgroundService) per device reads traps from Channel<TrapContext> via ReadAllAsync
+- [x] **TRAP-02**: Consumer passes each trap through composable middleware chain (correlationId, logging, error handling)
+- [x] **TRAP-03**: Consumer routes processed traps to SnmpExtractorService (Layer 3) for varbind extraction using device's trap PollDefinitionDto
+- [x] **TRAP-04**: Extracted trap data routes to MetricFactoryService (metrics) and StateVectorService (Source=Module traps only)
+- [x] **TRAP-05**: Consumer handles channel completion gracefully during shutdown (ReadAllAsync completes when channel writer is completed)
+- [x] **TRAP-06**: Consumer logs trap processing at structured log level with device name and trap OID context
+- [x] **TRAP-07**: End-to-end trap flow verified: listener → filter → channel → consumer → extractor → metrics + State Vector → OTLP export
 
 ### NPB Device Module (9)
 
@@ -86,14 +86,14 @@ This refines the v1.0 `{MetricName}_{Property}` pattern — the PropertyName val
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| METR-01 | Phase 11 | Pending |
-| TRAP-01 | Phase 11 | Pending |
-| TRAP-02 | Phase 11 | Pending |
-| TRAP-03 | Phase 11 | Pending |
-| TRAP-04 | Phase 11 | Pending |
-| TRAP-05 | Phase 11 | Pending |
-| TRAP-06 | Phase 11 | Pending |
-| TRAP-07 | Phase 11 | Pending |
+| METR-01 | Phase 11 | Complete |
+| TRAP-01 | Phase 11 | Complete |
+| TRAP-02 | Phase 11 | Complete |
+| TRAP-03 | Phase 11 | Complete |
+| TRAP-04 | Phase 11 | Complete |
+| TRAP-05 | Phase 11 | Complete |
+| TRAP-06 | Phase 11 | Complete |
+| TRAP-07 | Phase 11 | Complete |
 | NPB-01 | Phase 12 | Pending |
 | NPB-02 | Phase 12 | Pending |
 | NPB-03 | Phase 12 | Pending |
@@ -128,4 +128,4 @@ This refines the v1.0 `{MetricName}_{Property}` pattern — the PropertyName val
 
 ---
 *Requirements defined: 2026-02-16*
-*Last updated: 2026-02-16 after v1.0 scope extension*
+*Last updated: 2026-02-16 after Phase 11 completion*

@@ -10,7 +10,7 @@ Complete the v1.0 SNMP supervisor with trap channel consumers and two reference 
 
 | Phase | Name | Goal | Requirements | Plans (est) |
 |-------|------|------|-------------|-------------|
-| 11 | Trap Channel Consumers | Complete the trap pipeline — read from channels, process through middleware, extract, emit telemetry. Establish metric naming convention. | METR-01, TRAP-01..07 | 3 |
+| 11 | Trap Channel Consumers ✓ | Complete the trap pipeline — read from channels, process through middleware, extract, emit telemetry. Establish metric naming convention. | METR-01, TRAP-01..07 | 3 |
 | 12 | NPB Device Module | Reference implementation for standard SNMP device (NOTIFICATION-TYPE traps, table-based stats) | NPB-01..09 | 2 |
 | 13 | OBP Device Module | Reference implementation for non-standard SNMP device (per-link OIDs, OBJECT-TYPE traps) | OBP-01..17 | 2-3 |
 
@@ -33,9 +33,9 @@ Complete the v1.0 SNMP supervisor with trap channel consumers and two reference 
 **Plans:** 3 plans
 
 Plans:
-- [ ] 11-01-PLAN.md -- METR-01 metric naming convention (PropertyName as metric name)
-- [ ] 11-02-PLAN.md -- ChannelConsumerService + middleware + DI registration + unit tests
-- [ ] 11-03-PLAN.md -- End-to-end trap consumer flow integration test (TRAP-07)
+- [x] 11-01-PLAN.md -- METR-01 metric naming convention (PropertyName as metric name)
+- [x] 11-02-PLAN.md -- ChannelConsumerService + middleware + DI registration + unit tests
+- [x] 11-03-PLAN.md -- End-to-end trap consumer flow integration test (TRAP-07)
 
 **Dependencies:** None (builds on existing v1.0 infrastructure)
 
@@ -111,4 +111,4 @@ Unmapped: 0
 
 ---
 *Roadmap created: 2026-02-16*
-*Last updated: 2026-02-16 (Phase 11 planned)*
+*Last updated: 2026-02-16 (Phase 11 complete)*
