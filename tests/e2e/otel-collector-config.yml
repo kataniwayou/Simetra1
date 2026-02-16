@@ -1,0 +1,30 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    resource_to_telemetry_conversion:
+      enabled: true
+
+  elasticsearch:
+    endpoints:
+      - http://elasticsearch:9200
+    logs_index: simetra-logs
+    sending_queue:
+      enabled: true
+    flush:
+      bytes: 1024
+      interval: 1s
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus]
+    logs:
+      receivers: [otlp]
+      exporters: [elasticsearch]
