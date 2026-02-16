@@ -38,7 +38,7 @@ public sealed class MetricFactory : IMetricFactory
         {
             try
             {
-                var metricName = $"{result.Definition.MetricName}_{propertyName}";
+                var metricName = propertyName;
 
                 var tags = new TagList
                 {
@@ -60,8 +60,7 @@ public sealed class MetricFactory : IMetricFactory
             {
                 _logger.LogError(
                     ex,
-                    "Failed to record metric {MetricName}_{PropertyName} for device {DeviceName}",
-                    result.Definition.MetricName,
+                    "Failed to record metric {PropertyName} for device {DeviceName}",
                     propertyName,
                     device.Name);
             }

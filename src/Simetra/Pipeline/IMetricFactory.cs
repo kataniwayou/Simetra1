@@ -6,7 +6,7 @@ namespace Simetra.Pipeline;
 /// Creates and records OTLP-ready metrics from <see cref="ExtractionResult"/> data.
 /// Every metric is emitted with enforced base labels (site, device_name, device_ip, device_type)
 /// plus dynamic labels derived from Role:Label OID values in the extraction result.
-/// Metric names follow the pattern <c>{MetricName}_{PropertyName}</c>.
+/// Metric names use PropertyName directly (clean snake_case, e.g., port_rx_octets). Base labels provide device context.
 /// </summary>
 public interface IMetricFactory
 {
