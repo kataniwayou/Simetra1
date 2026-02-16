@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-16)
 
 ## Current Position
 
-Phase: 12 of 13 (npb-device-module)
-Plan: 1 of 2 complete
-Status: In progress
-Last activity: 2026-02-16 — Completed 12-01-PLAN.md (NpbModule implementation)
+Phase: 12 of 13 (npb-device-module) -- COMPLETE
+Plan: 2 of 2 complete
+Status: Phase complete
+Last activity: 2026-02-16 — Completed 12-02-PLAN.md (NpbModule registration and configuration)
 
-Progress: [█████████████████████████████░░░] 29/32 plans
+Progress: [██████████████████████████████░░] 30/32 plans
 
 ## Performance Metrics
 
@@ -43,6 +43,7 @@ New: TRAP-07 end-to-end integration tests prove full pipeline: channel -> consum
 New: Trap MetricNames use concise snake_case without device prefix (port_link_up, port_link_down) -- base labels provide device context per METR-01.
 New: Trap IntervalSeconds=0 indicates event-driven definitions (not polled).
 New: LinkStatus defined as standalone StatePollDefinition with Gauge type and EnumMap for TEXTUAL-CONVENTION mapping.
+New: NpbModule registered at 3 touchpoints: DI singleton, Quartz allModules, appsettings.json device entry with Configuration-source polls.
 
 ### Pending Todos
 
@@ -54,6 +55,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-16T06:26:45Z
-Stopped at: Completed 12-01-PLAN.md (NpbModule implementation) -- Phase 12 in progress
+Last session: 2026-02-16T06:32:00Z
+Stopped at: Completed 12-02-PLAN.md (NpbModule registration) -- Phase 12 complete
 Resume file: None
