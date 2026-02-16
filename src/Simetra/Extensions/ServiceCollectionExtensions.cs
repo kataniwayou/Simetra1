@@ -287,10 +287,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddDeviceModules(this IServiceCollection services)
     {
         services.AddSingleton<IDeviceModule, SimetraModule>();
-
-        // Future modules:
-        // services.AddSingleton<IDeviceModule, RouterModule>();
-        // services.AddSingleton<IDeviceModule, SwitchModule>();
+        services.AddSingleton<IDeviceModule, NpbModule>();
 
         return services;
     }
@@ -423,7 +420,8 @@ public static class ServiceCollectionExtensions
             // Device modules are code-defined and known at compile time. Create instances
             // directly for poll definition enumeration at registration time.
             var simetraModule = new SimetraModule();
-            var allModules = new IDeviceModule[] { simetraModule };
+            var npbModule = new NpbModule();
+            var allModules = new IDeviceModule[] { simetraModule, npbModule };
 
             foreach (var module in allModules)
             {
