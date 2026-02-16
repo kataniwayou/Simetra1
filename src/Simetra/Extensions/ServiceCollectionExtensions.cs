@@ -288,6 +288,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<IDeviceModule, SimetraModule>();
         services.AddSingleton<IDeviceModule, NpbModule>();
+        services.AddSingleton<IDeviceModule, ObpModule>();
 
         return services;
     }
@@ -421,7 +422,8 @@ public static class ServiceCollectionExtensions
             // directly for poll definition enumeration at registration time.
             var simetraModule = new SimetraModule();
             var npbModule = new NpbModule();
-            var allModules = new IDeviceModule[] { simetraModule, npbModule };
+            var obpModule = new ObpModule();
+            var allModules = new IDeviceModule[] { simetraModule, npbModule, obpModule };
 
             foreach (var module in allModules)
             {
