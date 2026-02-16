@@ -30,6 +30,7 @@ namespace Simetra.Extensions;
 //  5. Initialize device channels     -- DeviceChannelManager singleton (AddSnmpPipeline)
 //  6. Build middleware pipeline      -- TrapMiddlewareDelegate singleton (AddSnmpPipeline)
 //  7. Start SNMP listener            -- SnmpListenerService hosted service (AddSnmpPipeline)
+//  7b. Start channel consumers       -- ChannelConsumerService hosted service (AddSnmpPipeline)
 //  8. Merge poll definitions         -- PollDefinitionRegistry in AddScheduling
 //  9. Start Quartz scheduler         -- QuartzHostedService (AddScheduling)
 // 10. Generate first correlationId   -- Direct call after builder.Build() (Program.cs)
@@ -326,6 +327,11 @@ public static class ServiceCollectionExtensions
 
         // Hosted service (the listener)
         services.AddHostedService<SnmpListenerService>();
+
+        // Channel consumer service (reads from channels written by listener)
+        // Registered AFTER listener (starts after), BEFORE GracefulShutdownService
+        // (stops after shutdown orchestrator completes channels).
+        services.AddHostedService<ChannelConsumerService>();
 
         return services;
     }
