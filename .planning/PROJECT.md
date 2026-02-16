@@ -35,17 +35,20 @@ The SNMP pipeline must reliably receive traps, poll devices, extract data, and e
 
 ### Active
 
-(None -- next milestone requirements defined via /gsd:new-milestone)
+- Trap channel consumers completing the full trap pipeline (read → middleware → extract → process)
+- NPB device module (reference implementation — standard SNMP device with NOTIFICATION-TYPE traps, table statistics)
+- OBP device module (reference implementation — non-standard device with per-link OIDs, OBJECT-TYPE traps)
+- End-to-end trap flow verified through full pipeline with real device module definitions
 
 ### Out of Scope
 
 - State Vector staleness checking (detecting dead listener) -- future milestone
 - Direct listener health check in readiness probe -- future milestone
-- Real device modules (router, switch, etc.) -- v2.0
+- Real device modules beyond NPB/OBP reference implementations -- v2.0
 - SNMPv3 support -- v2c only for now
 - UI or API endpoints (headless service, probes only)
 - Dynamic configuration (hot reload) -- static config, restart required
-- Trap channel consumers (BackgroundService reading from channels) -- v2.0
+- ~~Trap channel consumers~~ -- moved to Active (v1.0)
 
 ## Context
 
@@ -55,7 +58,10 @@ The SNMP pipeline must reliably receive traps, poll devices, extract data, and e
 - Test stack: xUnit 2.9.3, FluentAssertions 7.2.0 (Apache 2.0), Moq 4.20.72
 - Pipeline architecture inspired by ASP.NET middleware pattern
 - Local development runs single instance as always-leader via ILeaderElection abstraction
-- Trap channels are write-only in v1.0 (architecture proven, consumers deferred to v2.0)
+- Trap channels getting consumers to complete the full pipeline
+- NPB (CGS Network Packet Broker) and OBP (GLSUN OTS3000 Optical Bypass) as reference device modules
+- NPB MIBs at `NPB/mibs/`, OBP MIB at `V5.2.4/BYPASS-CGS.mib`
+- Both devices share enterprise OID 1.3.6.1.4.1.47477 (CGS)
 - Codebase map at `.planning/codebase/`
 
 ## Constraints
@@ -92,5 +98,9 @@ The SNMP pipeline must reliably receive traps, poll devices, extract data, and e
 | RoleGatedExporter decorator pattern | Checks IsLeader on each Export call, dynamic role switching | Good |
 | Inverted TDD (implementation first) | Tests validate correctness after implementation, avoided rework from interface changes | Good |
 
+| PropertyName as metric name (no MetricName prefix) | Base labels (site, device_name, device_ip, device_type) provide all context; metric name is clean snake_case (e.g., port_rx_octets) | — Pending |
+| NPB + OBP as reference device modules | Demonstrate both standard (NOTIFICATION-TYPE, tables) and non-standard (OBJECT-TYPE traps, per-link OIDs) patterns | — Pending |
+| Trap consumers complete pipeline in v1.0 | Full end-to-end flow needed for reference implementations to be meaningful | — Pending |
+
 ---
-*Last updated: 2026-02-15 after v1.0 milestone*
+*Last updated: 2026-02-16 after v1.0 scope extension (trap consumers + device modules)*
