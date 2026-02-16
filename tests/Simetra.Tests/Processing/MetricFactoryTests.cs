@@ -134,7 +134,7 @@ public class MetricFactoryTests : IDisposable
         _sut.RecordMetrics(result, device);
         _listener.RecordObservableInstruments();
 
-        _recordedMeasurements.Should().Contain(m => m.InstrumentName == "simetra_heartbeat_uptime");
+        _recordedMeasurements.Should().Contain(m => m.InstrumentName == "uptime");
     }
 
     [Fact]
@@ -148,7 +148,7 @@ public class MetricFactoryTests : IDisposable
         _listener.RecordObservableInstruments();
 
         _recordedMeasurements.Should().Contain(m =>
-            m.InstrumentName == "simetra_gauge_test_value" &&
+            m.InstrumentName == "value" &&
             m.InstrumentType.Contains("Gauge") &&
             m.Value == 85L);
     }
@@ -164,7 +164,7 @@ public class MetricFactoryTests : IDisposable
         _listener.RecordObservableInstruments();
 
         _recordedMeasurements.Should().Contain(m =>
-            m.InstrumentName == "simetra_counter_test_value" &&
+            m.InstrumentName == "value" &&
             m.InstrumentType.Contains("Counter") &&
             m.Value == 100L);
     }
