@@ -41,15 +41,15 @@ This refines the v1.0 `{MetricName}_{Property}` pattern — the PropertyName val
 
 ### NPB Device Module (9)
 
-- [ ] **NPB-01**: NpbModule implements IDeviceModule with device type "NPB"
-- [ ] **NPB-02**: Trap definition for portLinkUp (notifications.101) with varbinds: module, severity, type, message, portsPortLogicalPortNumber, portsPortSpeed
-- [ ] **NPB-03**: Trap definition for portLinkDown (notifications.102) with varbinds: module, severity, type, message, portsPortLogicalPortNumber
-- [ ] **NPB-04**: Poll definition Source=Configuration for portStatisticsSummaryPortRxOctets → metric name `port_rx_octets` (Counter64)
-- [ ] **NPB-05**: Poll definition Source=Configuration for portStatisticsSummaryPortTxOctets → metric name `port_tx_octets` (Counter64)
-- [ ] **NPB-06**: Poll definition Source=Module for portStatisticsSummaryPortRxPackets → metric name `port_rx_packets` (Counter64)
-- [ ] **NPB-07**: Poll definition Source=Module for portStatisticsSummaryPortTxPackets → metric name `port_tx_packets` (Counter64)
-- [ ] **NPB-08**: EnumMap for LinkStatusType: unknown(-1), down(0), up(1), receiveDown(2), forcedDown(3) → metric name `port_link_status`
-- [ ] **NPB-09**: NPB registered in device module registry with test device configuration in appsettings.json
+- [x] **NPB-01**: NpbModule implements IDeviceModule with device type "NPB"
+- [x] **NPB-02**: Trap definition for portLinkUp (notifications.101) with varbinds: module, severity, type, message, portsPortLogicalPortNumber, portsPortSpeed
+- [x] **NPB-03**: Trap definition for portLinkDown (notifications.102) with varbinds: module, severity, type, message, portsPortLogicalPortNumber
+- [x] **NPB-04**: Poll definition Source=Configuration for portStatisticsSummaryPortRxOctets → metric name `port_rx_octets` (Counter64)
+- [x] **NPB-05**: Poll definition Source=Configuration for portStatisticsSummaryPortTxOctets → metric name `port_tx_octets` (Counter64)
+- [x] **NPB-06**: Poll definition Source=Module for portStatisticsSummaryPortRxPackets → metric name `port_rx_packets` (Counter64)
+- [x] **NPB-07**: Poll definition Source=Module for portStatisticsSummaryPortTxPackets → metric name `port_tx_packets` (Counter64)
+- [x] **NPB-08**: EnumMap for LinkStatusType: unknown(-1), down(0), up(1), receiveDown(2), forcedDown(3) → metric name `port_link_status`
+- [x] **NPB-09**: NPB registered in device module registry with test device configuration in appsettings.json
 
 ### OBP Device Module (17)
 
@@ -94,15 +94,15 @@ This refines the v1.0 `{MetricName}_{Property}` pattern — the PropertyName val
 | TRAP-05 | Phase 11 | Complete |
 | TRAP-06 | Phase 11 | Complete |
 | TRAP-07 | Phase 11 | Complete |
-| NPB-01 | Phase 12 | Pending |
-| NPB-02 | Phase 12 | Pending |
-| NPB-03 | Phase 12 | Pending |
-| NPB-04 | Phase 12 | Pending |
-| NPB-05 | Phase 12 | Pending |
-| NPB-06 | Phase 12 | Pending |
-| NPB-07 | Phase 12 | Pending |
-| NPB-08 | Phase 12 | Pending |
-| NPB-09 | Phase 12 | Pending |
+| NPB-01 | Phase 12 | Complete |
+| NPB-02 | Phase 12 | Complete |
+| NPB-03 | Phase 12 | Complete |
+| NPB-04 | Phase 12 | Complete |
+| NPB-05 | Phase 12 | Complete |
+| NPB-06 | Phase 12 | Complete |
+| NPB-07 | Phase 12 | Complete |
+| NPB-08 | Phase 12 | Complete |
+| NPB-09 | Phase 12 | Complete |
 | OBP-01 | Phase 13 | Pending |
 | OBP-02 | Phase 13 | Pending |
 | OBP-03 | Phase 13 | Pending |
@@ -128,4 +128,4 @@ This refines the v1.0 `{MetricName}_{Property}` pattern — the PropertyName val
 
 ---
 *Requirements defined: 2026-02-16*
-*Last updated: 2026-02-16 after Phase 11 completion*
+*Last updated: 2026-02-16 after Phase 12 completion*
